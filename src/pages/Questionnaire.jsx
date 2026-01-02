@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import Button from '../components/button';
 import './page.css';
 
-export default function LandingPage() {
+export default function Questionnaire() {
   const [step, setStep] = useState(0);
   const [goalText, setGoalText] = useState('');
   const [daysText, setDaysText] = useState(null);

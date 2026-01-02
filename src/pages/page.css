@@ -113,6 +113,8 @@ h1 {
   }
 }
 
+/* Demo Page */
+
 /* Each radio row */
 .demo-option {
   display: flex;
@@ -142,4 +144,67 @@ h1 {
 /* Text */
 .demo-option span {
   color: black;
+}
+
+.intro-text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+  text-align: center;
+  color: black;
+}
+
+.intro-text h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #111;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.intro-text h1:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.intro-text h1:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.demo-next-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.demo-next-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.demo-next-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .intro-text h1 {
+    font-size: 1.3rem;
+  }
 }

@@ -27,9 +27,8 @@
 }
 
 .nav-container {
-  margin-top: 10px;
   background-color: #083988;
-  padding: 0 200px;
+  padding: 10px 200px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,6 +36,12 @@
 }
 
 .nav-container h1 {
+  color: white;
+}
+
+.nav-container h1 a {
+  all: unset; /* removes default button styles */
+  cursor: pointer;
   color: white;
 }
 

@@ -32,7 +32,9 @@ function Navigation() {
 
   return (
     <div className="nav-container">
-      <h1>Workout AI Coach</h1>
+      <h1>
+        <a href="/">Workout AI Coach</a>
+      </h1>
 
       {session && (
         <div className="nav-links">

@@ -93,11 +93,12 @@ export default function App() {
         <Button
           className="free"
           onClick={() => navigate('/demo')}
-          label={'Try for free'}
+          label={'Watch the Demo to see how everything works !'}
         />
       </div>
 
       <div className="section">
+        <h2>Create an Account or Sign in ! </h2>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
           <Button label="Sign Up" onClick={() => navigate('/sign-up')} />
           <Button label="Login" onClick={() => navigate('/login')} />

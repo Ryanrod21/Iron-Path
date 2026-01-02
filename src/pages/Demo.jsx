@@ -1,6 +1,17 @@
+'use client';
+
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/button';
 
 const slides = [
+  {
+    text: [
+      'First lets go throught some of the options that is availble to you !',
+      'I will be selecting the options to show how things are done !',
+    ],
+    options: [],
+  },
   {
     text: 'Select your fitness goal',
     options: ['Lose Fat', 'Build Muscle', 'Run a Marthon', 'Bodybuilding'],
@@ -14,59 +25,92 @@ const slides = [
   {
     text: 'Where are you training ?',
     options: ['Home', 'Gym', 'Outside'],
-    autoPick: 2,
+    autoPick: 1,
   },
   {
     text: 'Comparing workout plans...',
     options: [],
   },
+  {
+    text: 'Click the Next Button to see the results',
+    options: [],
+  },
 ];
 
-const PICK_DELAY = 1200; // wait before radio checks
-const NEXT_DELAY = 2600; // wait before moving to next slide
+const PICK_DELAY = 2200; // wait before radio checks
+const NEXT_DELAY = 3600; // wait before moving to next slide
 
 export default function Demo() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [checked, setChecked] = useState(null);
 
   const slide = slides[slideIndex];
+  const isLastSlide = slideIndex === slides.length - 1;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setChecked(null);
 
-    if (slide.autoPick === undefined) return;
+    let pickTimer;
+    let nextTimer;
 
-    const pickTimer = setTimeout(() => {
-      setChecked(slide.autoPick);
-    }, PICK_DELAY);
+    if (slide.autoPick !== undefined) {
+      pickTimer = setTimeout(() => {
+        setChecked(slide.autoPick);
+      }, PICK_DELAY);
+    }
 
-    const nextTimer = setTimeout(() => {
-      if (slideIndex < slides.length - 1) {
+    if (!isLastSlide) {
+      nextTimer = setTimeout(() => {
         setSlideIndex((prev) => prev + 1);
-      }
-    }, NEXT_DELAY);
+      }, NEXT_DELAY);
+    }
 
     return () => {
-      clearTimeout(pickTimer);
-      clearTimeout(nextTimer);
+      if (pickTimer) clearTimeout(pickTimer);
+      if (nextTimer) clearTimeout(nextTimer);
     };
   }, [slideIndex]);
 
   return (
     <div className="landing-page">
       <div className="card step-card">
-        <h1 style={{ color: 'black' }}>{slide.text}</h1>
-        <div className="radio-group">
-          {slide.options.map((option, index) => (
-            <label
-              key={option}
-              className={`demo-option ${checked === index ? 'active' : ''}`}
-            >
-              <input type="radio" checked={checked === index} readOnly />
-              <span>{option}</span>
-            </label>
-          ))}
-        </div>
+        {Array.isArray(slide.text) ? (
+          <div className="intro-text">
+            {slide.text.map((line, index) => (
+              <h1 key={index} style={{ color: 'black' }}>
+                {line}
+              </h1>
+            ))}
+          </div>
+        ) : (
+          <h1 style={{ color: 'black' }}>{slide.text}</h1>
+        )}
+
+        {slide.options.length > 0 && (
+          <div className="radio-group">
+            {slide.options.map((option, index) => (
+              <label
+                key={option}
+                className={`demo-option ${checked === index ? 'active' : ''}`}
+              >
+                <input type="radio" checked={checked === index} readOnly />
+                <span>{option}</span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {isLastSlide && (
+          <div style={{ marginTop: 24, textAlign: 'center' }}>
+            <Button
+              className="demo-next-btn"
+              onClick={() => navigate('/demo-agent')}
+              label={'See Results →'}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
