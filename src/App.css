@@ -103,9 +103,9 @@ body {
 }
 
 /* Card-Home */
-.card-container {
+.homecard-container {
   display: flex;
-  gap: 16px; /* space between cards */
+  gap: 16px;
   justify-content: center;
   margin-top: 40px;
 }

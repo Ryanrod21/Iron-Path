@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './lib/supabaseClient';
 import { logoutUser } from './lib/auth';
-import Card from './components/UI/Card';
 import { Dumbbell, Zap, Target } from 'lucide-react';
 import Button from './components/button';
 import './App.css';
+import HomeCard from './components/UI/Card';
 
 export default function App() {
   const navigate = useNavigate();
@@ -91,18 +91,18 @@ export default function App() {
         experience level, and lifestyle. Start your transformation today.
       </h2>
 
-      <div className="card-container">
-        <Card
+      <div className="homecard-container">
+        <HomeCard
           label={'Tailored plans for your specific fitness objectives'}
           title={'Goal-Driven'}
           icon={Target}
         />
-        <Card
+        <HomeCard
           label={'Plans that evolve with your progess'}
           title={'Adaptive Training'}
           icon={Zap}
         />
-        <Card
+        <HomeCard
           label={'Professional coaching at your finger tips'}
           title={'Expert Guidance'}
           icon={Dumbbell}

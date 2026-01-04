@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Dumbbell, Zap, Trophy } from 'lucide-react';
 
 export default function AgentDemo() {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -15,14 +16,17 @@ export default function AgentDemo() {
       {
         plan_summary:
           'Upper / Lower split focused on compound lifts and progressive overload.',
+        icon: Dumbbell,
       },
       {
         plan_summary:
           'Push / Pull / Legs routine designed for hypertrophy and strength.',
+        icon: Zap,
       },
       {
         plan_summary:
           'Full-body training with higher frequency and balanced recovery.',
+        icon: Trophy,
       },
     ],
   };
@@ -67,61 +71,78 @@ export default function AgentDemo() {
         AI Suggested Workout Plans
       </h2>
 
-      {state.plans.map((plan, index) => (
-        <div
-          key={index}
-          onClick={() => handleExpand(index)}
-          style={{
-            color: 'white',
-            border: '2px solid',
-            borderColor:
-              pickedIndex === index
-                ? '#28a745'
-                : expandedIndex === index
-                ? 'white'
-                : 'white',
-            padding: 20,
-            marginBottom: 20,
-            borderRadius: 8,
-            backgroundColor:
-              pickedIndex === index ? '#e6ffed' : 'rgba(0, 0, 0, 0.562)',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-          }}
-        >
-          <h3>Plan {index + 1}</h3>
-          <p style={{ color: 'white' }}>
-            <strong>Summary:</strong> {plan.plan_summary}
-          </p>
+      {state.plans.map((plan, index) => {
+        const Icon = plan.icon;
 
-          {expandedIndex === index && (
-            <div style={{ marginTop: 12 }}>
-              <button
-                disabled={saving}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePick(index);
-                }}
-                style={{
-                  backgroundColor: '#28a745',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 14px',
-                  borderRadius: 4,
-                  cursor: 'pointer',
-                  opacity: saving ? 0.7 : 1,
-                }}
+        return (
+          <div
+            key={index}
+            onClick={() => handleExpand(index)}
+            style={{
+              color: 'white',
+              border: '2px solid',
+              borderColor:
+                pickedIndex === index
+                  ? '#28a745'
+                  : expandedIndex === index
+                  ? 'white'
+                  : 'white',
+              padding: 20,
+              marginBottom: 20,
+              borderRadius: 8,
+              backgroundColor:
+                pickedIndex === index ? '#00ff4827' : 'rgba(0, 0, 0, 0.562)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                className={`icon-small-div ${
+                  pickedIndex === index ? 'picked' : ''
+                }`}
               >
-                {saving
-                  ? 'Saving...'
-                  : pickedIndex === index
-                  ? 'Open Workout'
-                  : 'I pick this workout'}
-              </button>
+                <Icon
+                  className={`icon-small ${
+                    pickedIndex === index ? 'picked' : ''
+                  }`}
+                />
+              </div>
+              <h3>Plan {index + 1}</h3>
             </div>
-          )}
-        </div>
-      ))}
+            <p style={{ color: 'white' }}>
+              <strong>Summary:</strong> {plan.plan_summary}
+            </p>
+
+            {expandedIndex === index && (
+              <div style={{ marginTop: 12 }}>
+                <button
+                  disabled={saving}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePick(index);
+                  }}
+                  style={{
+                    backgroundColor: '#28a746ce',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: 4,
+                    cursor: 'pointer',
+                    opacity: saving ? 0.7 : 1,
+                  }}
+                >
+                  {saving
+                    ? 'Saving...'
+                    : pickedIndex === index
+                    ? 'Open Workout'
+                    : 'I pick this workout'}
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

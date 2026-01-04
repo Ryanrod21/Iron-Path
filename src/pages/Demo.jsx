@@ -41,7 +41,7 @@ const PICK_DELAY = 6200; // wait before radio checks
 const NEXT_DELAY = 7600; // wait before moving to next slide
 
 export default function Demo() {
-  const [slideIndex, setSlideIndex] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(1);
   const [checked, setChecked] = useState(null);
 
   const slide = slides[slideIndex];
@@ -83,24 +83,21 @@ export default function Demo() {
         {Array.isArray(slide.text) ? (
           <div className="intro-text">
             {slide.text.map((line, index) => (
-              <h1 key={index} style={{ color: 'black' }}>
-                {line}
-              </h1>
+              <h1 key={index}>{line}</h1>
             ))}
           </div>
         ) : (
-          <h1 style={{ color: 'black' }}>{slide.text}</h1>
+          <h1>{slide.text}</h1>
         )}
 
         {slide.options.length > 0 && (
           <div className="radio-group">
             {slide.options.map((option, index) => (
-              <label
-                key={option}
-                className={`demo-option ${checked === index ? 'active' : ''}`}
-              >
-                <input type="radio" checked={checked === index} readOnly />
-                <span>{option}</span>
+              <label key={option} className="radio-option">
+                <input type="radio" checked={checked === index} />
+
+                <span className="radio-circle"></span>
+                <span className="radio-text">{option}</span>
               </label>
             ))}
           </div>
