@@ -1,13 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { logoutUser } from '../lib/auth';
 
 function Navigation() {
   const [session, setSession] = useState(null);
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const showSignUp =
+    location.pathname === '/demo' || location.pathname === '/demo-agent';
 
   useEffect(() => {
     // Get initial session
@@ -43,6 +48,14 @@ function Navigation() {
           </h3>
           <h3>
             <button onClick={handleLogout}>Sign Out</button>
+          </h3>
+        </div>
+      )}
+
+      {showSignUp && (
+        <div className="nav-links">
+          <h3>
+            <a href="/sign-up">Sign Up</a>
           </h3>
         </div>
       )}

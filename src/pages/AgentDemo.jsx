@@ -6,7 +6,7 @@ export default function AgentDemo() {
   const [pickedIndex, setPickedIndex] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  const userName = 'New User !';
+  const userName = 'Visiting User !';
 
   const state = {
     goal: 'Build Muscle',
@@ -45,15 +45,16 @@ export default function AgentDemo() {
   };
 
   return (
-    <div style={{ padding: 40, maxWidth: 900, margin: '0 auto' }}>
-      <div class="bg-wrapper">
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
+    <div className="page-container">
+      <div className="bg-wrapper">
+        <div className="glow glow-1"></div>
+        <div className="glow glow-2"></div>
       </div>
-      <h1 style={{ color: 'white' }}>Your Workout Summary</h1>
-      <h2 style={{ color: 'white' }}>Welcome, {userName}</h2>
 
-      <section className="section-results" style={{ marginBottom: 20 }}>
+      <h1>Your Workout Summary</h1>
+      <h2>Welcome, {userName}</h2>
+
+      <section className="section-results">
         <p>
           <strong>Goal:</strong> {state.goal}
         </p>
@@ -67,9 +68,7 @@ export default function AgentDemo() {
 
       <hr />
 
-      <h2 style={{ color: 'white', margin: '20px 0' }}>
-        AI Suggested Workout Plans
-      </h2>
+      <h2 className="section-title">AI Suggested Workout Plans</h2>
 
       {state.plans.map((plan, index) => {
         const Icon = plan.icon;
@@ -77,26 +76,13 @@ export default function AgentDemo() {
         return (
           <div
             key={index}
+            className={`plan-card
+              ${pickedIndex === index ? 'picked' : ''}
+              ${expandedIndex === index ? 'expanded' : ''}
+            `}
             onClick={() => handleExpand(index)}
-            style={{
-              color: 'white',
-              border: '2px solid',
-              borderColor:
-                pickedIndex === index
-                  ? '#28a745'
-                  : expandedIndex === index
-                  ? 'white'
-                  : 'white',
-              padding: 20,
-              marginBottom: 20,
-              borderRadius: 8,
-              backgroundColor:
-                pickedIndex === index ? '#00ff4827' : 'rgba(0, 0, 0, 0.562)',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-            }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="plan-header">
               <div
                 className={`icon-small-div ${
                   pickedIndex === index ? 'picked' : ''
@@ -108,28 +94,22 @@ export default function AgentDemo() {
                   }`}
                 />
               </div>
+
               <h3>Plan {index + 1}</h3>
             </div>
-            <p style={{ color: 'white' }}>
+
+            <p className="plan-summary">
               <strong>Summary:</strong> {plan.plan_summary}
             </p>
 
             {expandedIndex === index && (
-              <div style={{ marginTop: 12 }}>
+              <div className="plan-action">
                 <button
+                  className="pick-button"
                   disabled={saving}
                   onClick={(e) => {
                     e.stopPropagation();
                     handlePick(index);
-                  }}
-                  style={{
-                    backgroundColor: '#28a746ce',
-                    color: 'white',
-                    border: 'none',
-                    padding: '8px 14px',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                    opacity: saving ? 0.7 : 1,
                   }}
                 >
                   {saving

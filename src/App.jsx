@@ -6,6 +6,7 @@ import { Dumbbell, Zap, Target } from 'lucide-react';
 import Button from './components/button';
 import './App.css';
 import HomeCard from './components/UI/Card';
+import BackgroundEffect from './components/UI/BackgroundEffect';
 
 export default function App() {
   const navigate = useNavigate();
@@ -75,11 +76,7 @@ export default function App() {
   // 5️⃣ Default UI for not logged-in users
   return (
     <div className="app-container">
-      <div class="bg-wrapper">
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
-      </div>
-
+      <BackgroundEffect />
       <div className="dumbbell-div">
         <Dumbbell className="dumbbell icon-primary" />
       </div>

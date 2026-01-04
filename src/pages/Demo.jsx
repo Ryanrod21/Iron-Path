@@ -1,34 +1,65 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/button';
+import BackgroundEffect from '../components/UI/BackgroundEffect';
 
 const slides = [
   {
-    text: [
-      'First lets go throught some of the options that is availble to you !',
-      'I will be selecting the options to show how things are done !',
-    ],
+    dialogue: `First lets go through some of the options that are available to you.
+    I will be selecting the options to show how things are done!`,
     options: [],
+    intro: true,
   },
   {
     text: 'Select your fitness goal',
-    options: ['Lose Fat', 'Build Muscle', 'Run a Marthon', 'Bodybuilding'],
+    options: [
+      'Lose Weight',
+      'Build Muscle',
+      'Improve Endurance',
+      'Genral Fitness',
+    ],
+    dialogue: `First I'm going to Select my Fitness Goal.`,
     autoPick: 1,
   },
   {
-    text: 'How many days do you want to train ?',
-    options: ['3', '4', '5', '6'],
+    text: 'What is your fitness experience level?',
+    options: [
+      'Beginner - New to working out',
+      'Intermediate - 1-2 years experience',
+      'Advanced - 3+ years experience',
+      'Athelete - Professional Level',
+    ],
+    dialogue: `Then I'm going to select my fitness experience.`,
+    autoPick: 1,
+  },
+  {
+    text: 'How many days per week can you commit?',
+    options: ['2-3 days per week', '4-5 days per week', '6-7 days per week'],
+    dialogue: `Now I'm going to select how many days I want to workout.`,
     autoPick: 0,
   },
   {
-    text: 'Where are you training ?',
-    options: ['Home', 'Gym', 'Outside'],
+    text: 'How long can you workout per session? ',
+    options: ['30 minutes', '45 minutes', '60 minutes', '90+ minutes'],
+    dialogue: `Next I'm going to select how many minutes I want to workout`,
+    autoPick: 2,
+  },
+  {
+    text: 'Where do you prefer to workout?',
+    options: [
+      'Gym with equipment',
+      'Home with minimal equipment',
+      'Outdoor activities',
+      'Mixed / Flexible',
+    ],
+    dialogue: `I'm going to pick the place I'm going to do my workouts `,
     autoPick: 1,
   },
   {
     text: 'Our coach is working on the plans...',
+    dialogue: 'Now lets wait for our coach design our plan',
     options: [],
   },
   {
@@ -43,11 +74,17 @@ const NEXT_DELAY = 7600; // wait before moving to next slide
 export default function Demo() {
   const [slideIndex, setSlideIndex] = useState(1);
   const [checked, setChecked] = useState(null);
+  const [typedText, setTypedText] = useState('');
+
+  const navigate = useNavigate();
+
+  const TOTAL_QUESTIONS = slides.length - 1; // exclude intro
+
+  const progressPercent =
+    slideIndex === 0 ? 0 : Math.round((slideIndex / TOTAL_QUESTIONS) * 100);
 
   const slide = slides[slideIndex];
   const isLastSlide = slideIndex === slides.length - 1;
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     setChecked(null);
@@ -73,29 +110,79 @@ export default function Demo() {
     };
   }, [slideIndex]);
 
+  // ===================
+  // Typing Effect Below
+  // ===================
+
+  const typingIndexRef = useRef(0);
+  const typingIntervalRef = useRef(null);
+
+  useEffect(() => {
+    if (!slide.dialogue) {
+      setTypedText('');
+      return;
+    }
+
+    setTypedText('');
+    typingIndexRef.current = 0;
+
+    typingIntervalRef.current = setInterval(() => {
+      const i = typingIndexRef.current;
+
+      if (i >= slide.dialogue.length) {
+        clearInterval(typingIntervalRef.current);
+        return;
+      }
+
+      setTypedText((prev) => prev + slide.dialogue.charAt(i));
+      typingIndexRef.current += 1;
+    }, 35);
+
+    return () => {
+      clearInterval(typingIntervalRef.current);
+    };
+  }, [slideIndex]);
+
+  useEffect(() => {
+    return () => setTypedText('');
+  }, [slideIndex]);
+
   return (
     <div className="landing-page">
-      <div class="bg-wrapper">
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
-      </div>
+      <BackgroundEffect />
       <div className="card step-card">
-        {Array.isArray(slide.text) ? (
-          <div className="intro-text">
-            {slide.text.map((line, index) => (
-              <h1 key={index}>{line}</h1>
-            ))}
+        {slideIndex > 0 && (
+          <div className="progress-wrapper">
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <span className="progress-text">{progressPercent}%</span>
           </div>
-        ) : (
-          <h1>{slide.text}</h1>
+        )}
+
+        {slide.dialogue && (
+          <div
+            className={`dialogue-box ${slide.intro ? 'dialogue-intro' : ''}`}
+          >
+            <span className="dialogue-text">{typedText}</span>
+            {!slide.intro && <span className="typing-cursor">|</span>}
+          </div>
+        )}
+
+        {slide.text && (
+          <h1 className={slide.intro ? 'intro-title' : 'slide-title'}>
+            {slide.text}
+          </h1>
         )}
 
         {slide.options.length > 0 && (
           <div className="radio-group">
             {slide.options.map((option, index) => (
               <label key={option} className="radio-option">
-                <input type="radio" checked={checked === index} />
-
+                <input type="radio" checked={checked === index} readOnly />
                 <span className="radio-circle"></span>
                 <span className="radio-text">{option}</span>
               </label>
