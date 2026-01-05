@@ -11,6 +11,7 @@ import SignUp from './pages/SignUp';
 import Navigation from './components/Navigation';
 import Demo from './pages/Demo';
 import AgentDemo from './pages/AgentDemo';
+import DemoSelection from './pages/DemoSelection';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path="/" element={<App />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/demo-agent" element={<AgentDemo />} />
+      <Route path="/demo-selection" element={<DemoSelection />} />
       <Route path="/questionnaire" element={<Questionnaire />} />
       <Route path="/results" element={<Agent />} />
       <Route path="/selected-workout" element={<SelectedWorkout />} />

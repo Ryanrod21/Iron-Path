@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dumbbell, Zap, Trophy } from 'lucide-react';
 
 export default function AgentDemo() {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [pickedIndex, setPickedIndex] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  const navigate = useNavigate();
 
   const userName = 'Visiting User !';
 
@@ -14,19 +17,28 @@ export default function AgentDemo() {
     location: 'Gym',
     plans: [
       {
+        plan: 'Strength Builder',
+        detail: 'Build muscle and power',
         plan_summary:
           'Upper / Lower split focused on compound lifts and progressive overload.',
         icon: Dumbbell,
+        iconName: 'Dumbbell',
       },
       {
+        plan: 'Athletic Performance',
+        detail: 'Speed, agility, and explosiveness',
         plan_summary:
           'Push / Pull / Legs routine designed for hypertrophy and strength.',
         icon: Zap,
+        iconName: 'Zap',
       },
       {
+        plan: 'Endurance Elite',
+        detail: 'Build stamina and resilience',
         plan_summary:
           'Full-body training with higher frequency and balanced recovery.',
         icon: Trophy,
+        iconName: 'Trophy',
       },
     ],
   };
@@ -39,7 +51,28 @@ export default function AgentDemo() {
     setSaving(true);
 
     setTimeout(() => {
-      setPickedIndex(index);
+      const plan = state.plans[index];
+
+      // Only pass serializable data (no React components!)
+      const serializablePlan = {
+        plan: plan.plan,
+        detail: plan.detail,
+        plan_summary: plan.plan_summary,
+        iconName: plan.iconName, // <- THIS IS THE KEY FIX
+      };
+
+      console.log('Serializing plan:', serializablePlan); // check here
+
+      navigate('/demo-selection', {
+        state: {
+          userName,
+          selectedPlan: serializablePlan,
+          goal: state.goal,
+          days: state.days,
+          location: state.location,
+        },
+      });
+
       setSaving(false);
     }, 600);
   };
@@ -77,10 +110,12 @@ export default function AgentDemo() {
           <div
             key={index}
             className={`plan-card
-              ${pickedIndex === index ? 'picked' : ''}
-              ${expandedIndex === index ? 'expanded' : ''}
-            `}
-            onClick={() => handleExpand(index)}
+            ${pickedIndex === index ? 'picked' : ''}
+            ${expandedIndex === index ? 'expanded' : ''}`}
+            onClick={() => {
+              handleExpand(index); // keep your expand behavior
+              setPickedIndex(index); // 🔥 select card for button
+            }}
           >
             <div className="plan-header">
               <div
@@ -94,35 +129,28 @@ export default function AgentDemo() {
                   }`}
                 />
               </div>
-
-              <h3>Plan {index + 1}</h3>
+              <div className="plan-title">
+                <h3>{plan.plan}</h3>
+                <p>{plan.detail}</p>
+              </div>
             </div>
 
             <p className="plan-summary">
               <strong>Summary:</strong> {plan.plan_summary}
             </p>
-
-            {expandedIndex === index && (
-              <div className="plan-action">
-                <button
-                  className="pick-button"
-                  disabled={saving}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePick(index);
-                  }}
-                >
-                  {saving
-                    ? 'Saving...'
-                    : pickedIndex === index
-                    ? 'Open Workout'
-                    : 'I pick this workout'}
-                </button>
-              </div>
-            )}
           </div>
         );
       })}
+
+      <div className="plan-action">
+        <button
+          className="pick-button"
+          disabled={pickedIndex === null || saving}
+          onClick={() => handlePick(pickedIndex)}
+        >
+          {pickedIndex === null ? 'Select a workout' : 'Confirm workout'}
+        </button>
+      </div>
     </div>
   );
 }

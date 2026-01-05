@@ -324,8 +324,17 @@ hr {
   transition: all 0.3s ease;
 }
 
+.plan-title h3 {
+  font-size: 25px;
+}
+
+.plan-title p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.459);
+}
+
 .plan-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-7px);
   border-color: rgb(41, 208, 238);
 }
 
@@ -346,6 +355,7 @@ hr {
 
 .plan-summary {
   margin-top: 8px;
+  color: rgba(255, 255, 255, 0.377);
 }
 
 .pick-button {

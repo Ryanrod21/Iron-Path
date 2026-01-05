@@ -72,7 +72,7 @@ const PICK_DELAY = 6200; // wait before radio checks
 const NEXT_DELAY = 7600; // wait before moving to next slide
 
 export default function Demo() {
-  const [slideIndex, setSlideIndex] = useState(1);
+  const [slideIndex, setSlideIndex] = useState(0);
   const [checked, setChecked] = useState(null);
   const [typedText, setTypedText] = useState('');
 
