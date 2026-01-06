@@ -322,7 +322,37 @@ hr {
   background-color: rgba(0, 0, 0, 0.56);
   cursor: pointer;
   transition: all 0.3s ease;
+}
 
+.plan-expanded {
+  overflow: visible;
+}
+
+.plan-expanded ul {
+  list-style-position: inside;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.plan-expanded li{
+  color: rgba(255, 255, 255, 0.459);
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.custom-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.icon-bullet{
+  color: rgb(41, 208, 238);
+  height: 20px;
+  width: 20px;
 }
 
 .plan-title{

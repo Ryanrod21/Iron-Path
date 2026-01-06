@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dumbbell, Zap, Trophy } from 'lucide-react';
+import BackgroundEffect from '../components/UI/BackgroundEffect'
 
 export default function AgentDemo() {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -23,6 +24,9 @@ export default function AgentDemo() {
           'Upper / Lower split focused on compound lifts and progressive overload.',
         icon: Dumbbell,
         iconName: 'Dumbbell',
+        expect: [
+          'Use weight equipment', 'Heavy lifts', 'Starts light then goes heavy for each sets', 'Mainly gym for gym and or place with weights'
+        ],
       },
       {
         plan: 'Athletic Performance',
@@ -31,6 +35,9 @@ export default function AgentDemo() {
           'Push / Pull / Legs routine designed for hypertrophy and strength.',
         icon: Zap,
         iconName: 'Zap',
+        expect: [
+          'Not much heavy weights', 'Focus on exploding', 'Focus on higher reps', 'Three day split on each body part that is being work'
+        ],
       },
       {
         plan: 'Endurance Elite',
@@ -39,6 +46,9 @@ export default function AgentDemo() {
           'Full-body training with higher frequency and balanced recovery.',
         icon: Trophy,
         iconName: 'Trophy',
+        expect: [
+          'Use more body weight', 'Less rest more intense', 'More cardio', 'Can be down anywhere with open space'
+        ],
       },
     ],
   };
@@ -79,10 +89,7 @@ export default function AgentDemo() {
 
   return (
     <div className="page-container">
-      <div className="bg-wrapper">
-        <div className="glow glow-1"></div>
-        <div className="glow glow-2"></div>
-      </div>
+      <BackgroundEffect />
 
       <h1>Your Workout Summary</h1>
       <h2>Welcome, {userName}</h2>
@@ -134,10 +141,28 @@ export default function AgentDemo() {
             <p className="plan-summary">
               <strong>Summary:</strong> {plan.plan_summary}
             </p>
+
+            {expandedIndex === index && Array.isArray(plan.expect) && (
+              <div className="plan-expanded">
+                <ul className="custom-list">
+                  {plan.expect.map((e, i) => (
+                    <li key={i}>
+                      {/* Render the same icon as bullet */}
+                      <Icon className='icon-bullet'/> 
+                      <span>{e}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+
+          
               </div>
             </div>
           </div>
         );
+        
       })}
 
       <div className="plan-action">
