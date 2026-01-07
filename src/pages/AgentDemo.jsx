@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dumbbell, Zap, Trophy } from 'lucide-react';
-import BackgroundEffect from '../components/UI/BackgroundEffect'
+import BackgroundEffect from '../components/UI/BackgroundEffect';
 
 export default function AgentDemo() {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -26,7 +26,10 @@ export default function AgentDemo() {
         icon: Dumbbell,
         iconName: 'Dumbbell',
         expect: [
-          'Use weight equipment', 'Heavy lifts', 'Starts light then goes heavy for each sets', 'Mainly gym for gym and or place with weights'
+          'Use weight equipment',
+          'Heavy lifts',
+          'Starts light then goes heavy for each sets',
+          'Mainly gym for gym and or place with weights',
         ],
       },
       {
@@ -37,7 +40,10 @@ export default function AgentDemo() {
         icon: Zap,
         iconName: 'Zap',
         expect: [
-          'Not much heavy weights', 'Focus on exploding', 'Focus on higher reps', 'Three day split on each body part that is being work'
+          'Not much heavy weights',
+          'Focus on exploding',
+          'Focus on higher reps',
+          'Three day split on each body part that is being work',
         ],
       },
       {
@@ -48,7 +54,10 @@ export default function AgentDemo() {
         icon: Trophy,
         iconName: 'Trophy',
         expect: [
-          'Use more body weight', 'Less rest more intense', 'More cardio', 'Can be down anywhere with open space'
+          'Use more body weight',
+          'Less rest more intense',
+          'More cardio',
+          'Can be down anywhere with open space',
         ],
       },
     ],
@@ -140,37 +149,27 @@ export default function AgentDemo() {
                 <h3>{plan.plan}</h3>
                 <p>{plan.detail}</p>
 
-            <p className="plan-summary">
-              <strong>Summary:</strong> {plan.plan_summary}
-            </p>
+                <p className="plan-summary">
+                  <strong>Summary:</strong> {plan.plan_summary}
+                </p>
 
-            {expandedIndex === index && Array.isArray(plan.expect) && (
-              <div className="plan-expanded">
-                <ul className="custom-list">
-                  {plan.expect.map((e, i) => (
-                    <li key={i}>
-                      {/* Render the same icon as bullet */}
-                      <Icon className='icon-bullet'/> 
-                      <span>{e}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {expandedIndex && (
-              <div className="blur-card">
-              <p>Sign up for results</p>
-              </div>
-            )}
-
-
-          
+                {expandedIndex === index && Array.isArray(plan.expect) && (
+                  <div className="plan-expanded">
+                    <ul className="custom-list">
+                      {plan.expect.map((e, i) => (
+                        <li key={i}>
+                          {/* Render the same icon as bullet */}
+                          <Icon className="icon-bullet" />
+                          <span>{e}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         );
-        
       })}
 
       <div className="plan-action">

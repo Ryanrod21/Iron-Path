@@ -36,7 +36,12 @@ const slides = [
   },
   {
     text: 'How many days per week can you commit?',
-    options: ['2-3 days per week', '4-5 days per week', '6-7 days per week'],
+    options: [
+      '3 days per week',
+      '4 days per week',
+      '5 days per week',
+      '6 days per week',
+    ],
     dialogue: `Now I'm going to select how many days I want to workout.`,
     autoPick: 0,
   },

@@ -2,6 +2,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, Zap, Trophy } from 'lucide-react';
 import { useState } from 'react';
+import Button from '../components/button';
 
 const ICONS = { Dumbbell, Zap, Trophy };
 
@@ -26,6 +27,10 @@ export default function DemoSelection() {
   }
 
   const Icon = ICONS[selectedPlan.iconName] || null;
+
+  const handleSignIn = () => {
+    navigate('/sign-up');
+  };
 
   return (
     <div className="page-container">
@@ -68,7 +73,9 @@ export default function DemoSelection() {
                 <ul className="custom-list list-none pl-0">
                   {selectedPlan.expect.map((e, i) => (
                     <li key={i} className="flex items-start gap-2 mb-1">
-                      {Icon && <Icon className="icon-bullet mt-1 text-blue-500" />}
+                      {Icon && (
+                        <Icon className="icon-bullet mt-1 text-blue-500" />
+                      )}
                       <span>{e}</span>
                     </li>
                   ))}
@@ -77,6 +84,20 @@ export default function DemoSelection() {
             )}
           </div>
         </div>
+        {expanded && (
+          <div className="blur-card">
+            <Button label={'Sign Up Now'} onClick={handleSignIn} />
+            <div className="test">
+              <p className="blurred-text">This Random Text</p>
+              <p className="blurred-text">This is a random text but longer </p>
+              <p className="blurred-text">Somethign tsoadfkas </p>
+              <p className="blurred-text">This Random Texasdf afdasf asfat</p>
+              <p className="blurred-text">
+                This Random Texasd asf dasf asf asft
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
