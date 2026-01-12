@@ -299,6 +299,58 @@ p {
   color: black;
 }
 
+.icon-med {
+  width: 65px;
+  height: 65px;
+  color: black;
+}
+
+.icon-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-med-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(41, 208, 238);
+  width: 105px;
+  height: 105px;
+  border-radius: 20px;
+}
+
+.day-card {
+  cursor: pointer;
+}
+
+.day-card .day-exercises {
+  margin-top: 12px;
+}
+
+.day-card.expanded {
+  border-color: #28a745;
+}
+
+.day-title {
+  font-size: 24px;
+}
+
+.exercise-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.exercise-name {
+  font-size: 22px;
+}
+
+.exercise-card p {
+  font-size: 20px;
+}
+
 .section-results {
   margin-bottom: 20px;
 }

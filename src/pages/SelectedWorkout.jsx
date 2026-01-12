@@ -3,9 +3,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { Dumbbell, Zap, Trophy } from 'lucide-react';
+import Button from '../components/button';
 
 export default function SelectedWorkout() {
-  const [workout, setWorkout] = useState(null);
+  const [gymRow, setGymRow] = useState(null);
+  const [expandedDayIndex, setExpandedDayIndex] = useState(null); // single expand toggle
+  const [workouts, setWorkouts] = useState([]); // 🔑 normalized
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
 
@@ -24,40 +28,48 @@ export default function SelectedWorkout() {
         .limit(1)
         .single();
 
-      if (error) return console.error(error);
-      setWorkout(data);
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setGymRow(data);
+
+      // 🔑 NORMALIZE HERE
+      const extractedWorkouts = data.plans?.[0]?.plans ?? [];
+      setWorkouts(extractedWorkouts);
     };
 
     fetchWorkout();
   }, []);
 
-  if (!workout) {
+  if (!gymRow || workouts.length === 0) {
     return <div style={{ padding: 40 }}>Loading workout...</div>;
   }
 
-  const selectedIndex = workout.selected_plan_index;
-  const selectedPlan =
-    selectedIndex !== null ? workout.plans[selectedIndex] : null;
+  const selectedIndex = gymRow.selected_plan_index;
+  const selectedPlan = selectedIndex !== null ? workouts[selectedIndex] : null;
 
-  const otherPlans = workout.plans.filter(
-    (_, index) => index !== selectedIndex
-  );
+  const otherPlans = workouts.filter((_, index) => index !== selectedIndex);
 
   const switchPlan = async (newIndex) => {
     setSaving(true);
+
+    const pickedWorkout = workouts[newIndex];
 
     await supabase
       .from('gym')
       .update({
         selected_plan_index: newIndex,
-        selected_plan: workout.plans[newIndex],
+        selected_plan: pickedWorkout,
       })
-      .eq('id', workout.id);
+      .eq('id', gymRow.id)
+      .eq('user_id', gymRow.user_id);
 
-    setWorkout((prev) => ({
+    setGymRow((prev) => ({
       ...prev,
       selected_plan_index: newIndex,
-      selected_plan: prev.plans[newIndex],
+      selected_plan: pickedWorkout,
     }));
 
     setSaving(false);
@@ -67,117 +79,110 @@ export default function SelectedWorkout() {
     navigate('/results');
   };
 
+  const categoryIcons = {
+    'Strength Builder': Dumbbell,
+    'Endurance Elite': Zap,
+    'Athletic Performance': Trophy,
+  };
+
+  const Icon = categoryIcons[selectedPlan.category];
+
+  const toggleDay = (index) => {
+    setExpandedDayIndex((prev) => (prev === index ? null : index));
+  };
+
+  console.log(selectedPlan);
+
   return (
-    <div style={{ padding: 40, maxWidth: 900, margin: '0 auto' }}>
-      <h1 style={{ color: 'white' }}>Your Workout Plan</h1>
-
-      {/* ✅ SELECTED PLAN — EXPANDED */}
+    <div className="page-container">
+      <h1>Your Workout Plan</h1>
+      {/* ICON */}
+      <div className="icon-center">
+        <h3>{selectedPlan.category}</h3>
+        <div className="icon-med-div">
+          <Icon className="icon-med" />
+        </div>
+      </div>
+      {/* ✅ SELECTED PLAN CARD (same as Results page) */}
       {selectedPlan && (
-        <section
-          style={{
-            border: '2px solid #28a745',
-            borderRadius: 10,
-            padding: 24,
-            backgroundColor: '#e6ffed',
-            marginBottom: 40,
-          }}
-        >
-          <h2 style={{ marginBottom: 10 }}>Selected Workout</h2>
+        <>
+          <h2 className="section-title">Selected Workout</h2>
+          <hr />
 
-          <p>
-            <strong>Summary:</strong> {selectedPlan.plan_summary}
-          </p>
+          {/* 🔽 DAILY BREAKDOWN */}
+          <h3 className="section-title">Daily Breakdown</h3>
 
-          {selectedPlan.weekly_plan && (
-            <>
-              <h3>Weekly Overview</h3>
-              <pre
-                style={{
-                  backgroundColor: '#f1f1f1',
-                  padding: 12,
-                  borderRadius: 6,
-                  whiteSpace: 'pre-wrap',
-                }}
+          {selectedPlan.days.map((day, dayIndex) => {
+            const isExpanded = expandedDayIndex === dayIndex;
+
+            return (
+              <div
+                key={dayIndex}
+                className={`plan-card day-card picked ${
+                  isExpanded ? 'expanded' : ''
+                }`}
+                onClick={() => toggleDay(dayIndex)}
               >
-                {selectedPlan.weekly_plan}
-              </pre>
-            </>
-          )}
-
-          <h3>Daily Breakdown</h3>
-
-          {selectedPlan.days.map((day, dayIndex) => (
-            <div
-              key={dayIndex}
-              style={{
-                marginBottom: 20,
-                padding: 16,
-                backgroundColor: '#ffffff',
-                borderRadius: 8,
-                border: '1px solid #ddd',
-              }}
-            >
-              <h4>
-                {day.day} — {day.focus}
-              </h4>
-
-              {day.exercises.map((exercise, exIndex) => (
-                <div
-                  key={exIndex}
-                  style={{
-                    marginTop: 10,
-                    padding: 10,
-                    border: '1px solid #eee',
-                    borderRadius: 6,
-                  }}
-                >
-                  <strong>{exercise.name}</strong>
-                  <p>Reps/Sets: {exercise.reps_sets}</p>
-                  <p>Notes: {exercise.notes}</p>
+                <div className="plan-header">
+                  <div className="plan-title">
+                    <h4 className="day-title">
+                      {day.day} — {day.focus}
+                    </h4>
+                  </div>
                 </div>
-              ))}
-            </div>
-          ))}
-        </section>
+
+                {/* 🔽 EXPANDABLE CONTENT */}
+                {isExpanded && (
+                  <div className="day-exercises">
+                    {day.exercises.map((exercise, exIndex) => (
+                      <div key={exIndex} className="exercise-card">
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                          <Icon className="icon-bullet" />
+                        </div>
+                        <strong className="exercise-name">
+                          {exercise.name}
+                        </strong>
+                        <p className="exercise-reps">
+                          Reps/Sets: {exercise.reps_sets}
+                        </p>
+                        <p className="exercise-notes">
+                          Notes: {exercise.notes}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </>
       )}
-
-      {/* 🔁 OTHER PLANS — COLLAPSED */}
-      <h2 style={{ color: 'white' }}>Other Saved Plans</h2>
-
+      {/* 🔁 OTHER PLANS */}
+      <h2 className="section-title">Other Saved Plans</h2>
       {otherPlans.map((plan, index) => {
-        const realIndex = workout.plans.indexOf(plan);
+        const realIndex = workouts.indexOf(plan);
 
         return (
-          <div
-            key={index}
-            style={{
-              border: '1px solid #ddd',
-              borderRadius: 8,
-              padding: 16,
-              marginBottom: 16,
-            }}
-          >
-            <h4 style={{ color: 'white' }}>{plan.plan_summary}</h4>
+          <div key={index} className="plan-card">
+            <div className="plan-title">
+              <p className="plan-summary">{plan.plan_summary}</p>
+            </div>
 
-            <button
+            <Button
+              className="pick-button"
               disabled={saving}
               onClick={() => switchPlan(realIndex)}
-              style={{
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                padding: '8px 14px',
-                borderRadius: 4,
-                cursor: 'pointer',
-              }}
-            >
-              Switch to this plan
-            </button>
+              label={'Switch to this plan'}
+            />
           </div>
         );
       })}
 
-      <button onClick={handleResults}>Back to results</button>
+      <Button
+        className="secondary-button"
+        onClick={handleResults}
+        label={'Back to results'}
+      />
     </div>
   );
 }

@@ -4,14 +4,19 @@ import { supabase } from '../lib/supabaseClient.js';
 import { Dumbbell, Zap, Trophy } from 'lucide-react';
 
 export default function Agent() {
-  const [expandedIndex, setExpandedIndex] = useState(null);
-  const [saving, setSaving] = useState(false);
-  const [state, setState] = useState(null); // holds the gym row
-  const [userName, setUserName] = useState('');
-
   const navigate = useNavigate();
 
-  // 🔹 Fetch logged-in user + latest workout row
+  // UI state
+  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [tempPickedIndex, setTempPickedIndex] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  // Data state
+  const [gymRow, setGymRow] = useState(null);
+  const [workouts, setWorkouts] = useState([]); // 🔑 normalized workouts
+  const [userName, setUserName] = useState('');
+
+  // 🔹 Fetch user + workout
   useEffect(() => {
     const fetchUserAndWorkout = async () => {
       const {
@@ -36,8 +41,18 @@ export default function Agent() {
         return;
       }
 
-      if (data && data.length > 0) {
-        setState(data[0]);
+      if (!data || data.length === 0) return;
+
+      const row = data[0];
+      setGymRow(row);
+
+      // 🔑 NORMALIZE HERE (ONLY ONCE)
+      const extractedWorkouts = row.plans?.[0]?.plans ?? [];
+      setWorkouts(extractedWorkouts);
+
+      // restore confirmed selection
+      if (row.selected_plan_index !== null) {
+        setTempPickedIndex(row.selected_plan_index);
       }
     };
 
@@ -45,7 +60,7 @@ export default function Agent() {
   }, []);
 
   // 🔹 Guard
-  if (!state || !state.plans) {
+  if (!gymRow || workouts.length === 0) {
     return (
       <div style={{ padding: 40 }}>
         <h2>No workout found</h2>
@@ -54,14 +69,16 @@ export default function Agent() {
     );
   }
 
-  // 🔑 Derived from DB (persistent)
-  const pickedIndex = state.selected_plan_index;
+  const pickedIndex = gymRow.selected_plan_index;
 
-  const handleExpand = (index) => {
+  const handleExpandAndPick = (index) => {
     setExpandedIndex(expandedIndex === index ? null : index);
+    setTempPickedIndex(index);
   };
 
-  const handlePick = async (index) => {
+  const handleConfirmPick = async () => {
+    if (tempPickedIndex === null) return;
+
     setSaving(true);
 
     try {
@@ -74,36 +91,36 @@ export default function Agent() {
         return;
       }
 
-      // 🔹 Update selected plan
+      const pickedWorkout = workouts[tempPickedIndex];
+
       const { error } = await supabase
         .from('gym')
         .update({
-          selected_plan_index: index,
-          selected_plan: state.plans[index],
+          selected_plan_index: tempPickedIndex,
+          selected_plan: pickedWorkout,
         })
-        .eq('id', state.id)
-        .eq('user_id', user.id); // 🔑 required for RLS
+        .eq('id', gymRow.id)
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
-      // 🔹 Update local state for instant UI feedback
-      setState((prev) => ({
+      // instant UI sync
+      setGymRow((prev) => ({
         ...prev,
-        selected_plan_index: index,
-        selected_plan: prev.plans[index],
+        selected_plan_index: tempPickedIndex,
+        selected_plan: pickedWorkout,
       }));
 
-      // 🔹 Navigate
       navigate('/selected-workout', {
         state: {
-          goal: state.goal,
-          days: state.days,
-          train: state.location,
-          pickedPlan: state.plans[index],
+          goal: gymRow.goal,
+          days: gymRow.days,
+          train: gymRow.location,
+          pickedPlan: pickedWorkout, // ✅ SINGLE WORKOUT
         },
       });
     } catch (err) {
-      console.error('Failed to save selected plan:', err);
+      console.error(err);
       alert('Failed to save workout selection.');
     } finally {
       setSaving(false);
@@ -116,52 +133,45 @@ export default function Agent() {
     'Athletic Performance': Trophy,
   };
 
-  console.log(state);
-  console.log(state.plans[0].plans);
-
   return (
     <div style={{ padding: 40, maxWidth: 900, margin: '0 auto' }}>
       <h1 style={{ color: 'white' }}>Your Workout Summary</h1>
       {userName && <h2 style={{ color: 'white' }}>Welcome, {userName}</h2>}
 
-      <section className="section-results" style={{ marginBottom: 20 }}>
+      <section className="section-results">
         <p>
-          <strong>Goal:</strong> {state.goal}
+          <strong>Goal:</strong> {gymRow.goal}
         </p>
         <p>
-          <strong>Training Days:</strong> {state.days} days per week
+          <strong>Training Days:</strong> {gymRow.days} days per week
         </p>
         <p>
-          <strong>Training Location:</strong> {state.location}
+          <strong>Training Location:</strong> {gymRow.location}
         </p>
       </section>
 
       <hr />
 
-      {state.plans[0].plans.map((plan, index) => {
-        const CategoryIcon = categoryIcons[plan.category]; // just use it here
+      {workouts.map((plan, index) => {
+        const CategoryIcon = categoryIcons[plan.category];
 
         return (
           <div
             key={index}
-            className={`plan-card 
-            ${pickedIndex === index ? 'picked' : ''} 
-            ${expandedIndex === index ? 'expanded' : ''}`}
-            onClick={() => {
-              handleExpand(index);
-            }}
+            className={`plan-card
+              ${pickedIndex === index ? 'picked-confirmed' : ''}
+              ${tempPickedIndex === index ? 'picked-preview' : ''}
+              ${expandedIndex === index ? 'expanded' : ''}
+            `}
+            onClick={() => handleExpandAndPick(index)}
           >
             <div className="plan-header">
               <div
                 className={`icon-small-div ${
-                  pickedIndex === index ? 'picked' : ''
+                  tempPickedIndex === index ? 'picked' : ''
                 }`}
               >
-                <CategoryIcon
-                  className={`icon-small ${
-                    pickedIndex === index ? 'picked' : ''
-                  }`}
-                />
+                <CategoryIcon className="icon-small" />
               </div>
 
               <div className="plan-title">
@@ -191,10 +201,14 @@ export default function Agent() {
       <div className="plan-action">
         <button
           className="pick-button"
-          disabled={pickedIndex === null || saving}
-          onClick={() => handlePick(pickedIndex)}
+          disabled={tempPickedIndex === null || saving}
+          onClick={handleConfirmPick}
         >
-          {pickedIndex === null ? 'Select a workout' : 'Confirm workout'}
+          {saving
+            ? 'Saving...'
+            : tempPickedIndex === null
+            ? 'Select a workout'
+            : 'Confirm workout'}
         </button>
       </div>
     </div>

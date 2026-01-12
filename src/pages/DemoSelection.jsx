@@ -52,7 +52,11 @@ export default function DemoSelection() {
       <h2 className="section-title">Your Selected Workout</h2>
       <hr />
 
-      <div className="plan-card picked" style={{transform: 'none'}} onClick={() => setExpanded(!expanded)}>
+      <div
+        className="plan-card picked"
+        style={{ transform: 'none' }}
+        onClick={() => setExpanded(!expanded)}
+      >
         <div className="plan-header">
           <div className="icon-small-div picked">
             {Icon && <Icon className="icon-small picked" />}
@@ -71,10 +75,8 @@ export default function DemoSelection() {
               <div className="plan-expanded mt-2">
                 <ul className="custom-list list-none pl-0">
                   {selectedPlan.expect.map((e, i) => (
-                    <li key={i} className="flex items-start gap-2 mb-1">
-                      {Icon && (
-                        <Icon className="icon-bullet mt-1 text-blue-500" />
-                      )}
+                    <li key={i}>
+                      {Icon && <Icon className="icon-bullet " />}
                       <span>{e}</span>
                     </li>
                   ))}
