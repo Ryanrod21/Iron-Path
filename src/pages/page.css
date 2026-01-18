@@ -56,7 +56,9 @@
   border: 2px solid rgb(38, 43, 63);
   border-radius: 8px;
   cursor: pointer;
-  transition: border 0.2s ease, background 0.2s ease;
+  transition:
+    border 0.2s ease,
+    background 0.2s ease;
   font-size: 20px;
   color: white;
   height: 65px;
@@ -245,7 +247,9 @@ p {
   font-size: 1rem;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .demo-next-btn:hover {
@@ -320,18 +324,6 @@ p {
   width: 105px;
   height: 105px;
   border-radius: 20px;
-}
-
-.day-card {
-  cursor: pointer;
-}
-
-.day-card .day-exercises {
-  margin-top: 12px;
-}
-
-.day-card.expanded {
-  border-color: #28a745;
 }
 
 .day-title {
@@ -437,7 +429,14 @@ hr {
 
 .plan-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 20px;
 }
 
@@ -453,7 +452,9 @@ hr {
   padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .pick-button:hover {
@@ -568,7 +569,9 @@ hr {
   background-color: #111827;
   color: #ffffff;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-section input::placeholder {
@@ -590,7 +593,9 @@ hr {
   background-color: #3b82f6;
   color: #ffffff;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .form-section button:hover {
@@ -606,4 +611,60 @@ hr {
   text-align: center;
   font-size: 0.95rem;
   color: #d1d5db;
+}
+
+.finished-wrapper {
+  display: flex;
+  gap: 16px; /* space between finished and didn't finish */
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.label-text {
+  user-select: none; /* prevents text selection when clicking */
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.checkbox.checked {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+.checkbox.failed {
+  background-color: #ef4444;
+  border-color: #ef4444;
+}
+
+.checkmark,
+.xmark {
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.next-week-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.unlock-info {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
 }

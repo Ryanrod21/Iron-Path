@@ -6,14 +6,11 @@ import { Dumbbell, Zap, Trophy } from 'lucide-react';
 export default function Agent() {
   const navigate = useNavigate();
 
-  // UI state
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [tempPickedIndex, setTempPickedIndex] = useState(null);
   const [saving, setSaving] = useState(false);
-
-  // Data state
   const [gymRow, setGymRow] = useState(null);
-  const [workouts, setWorkouts] = useState([]); // 🔑 normalized workouts
+  const [workouts, setWorkouts] = useState([]);
   const [userName, setUserName] = useState('');
 
   // 🔹 Fetch user + workout
@@ -207,8 +204,8 @@ export default function Agent() {
           {saving
             ? 'Saving...'
             : tempPickedIndex === null
-            ? 'Select a workout'
-            : 'Confirm workout'}
+              ? 'Select a workout'
+              : 'Confirm workout'}
         </button>
       </div>
     </div>
