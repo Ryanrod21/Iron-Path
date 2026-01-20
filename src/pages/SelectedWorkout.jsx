@@ -38,6 +38,10 @@ export default function SelectedWorkout() {
       setGymRow(data);
       const extractedWorkouts = data.plans?.[0]?.plans ?? [];
       setWorkouts(extractedWorkouts);
+
+      if (data.day_status) {
+        setDayStatus(data.day_status);
+      }
     };
 
     fetchWorkout();
@@ -76,8 +80,7 @@ export default function SelectedWorkout() {
     return <div style={{ padding: 40 }}>Loading workout...</div>;
   }
 
-  const selectedIndex = gymRow.selected_plan_index;
-  const selectedPlan = selectedIndex !== null ? workouts[selectedIndex] : null;
+  const selectedPlan = gymRow.selected_plan;
 
   if (!selectedPlan) {
     return <div style={{ padding: 40 }}>No workout selected.</div>;
@@ -91,11 +94,23 @@ export default function SelectedWorkout() {
 
   const Icon = categoryIcons[selectedPlan.category];
 
-  const toggleDayStatus = (dayIndex, status) => {
-    setDayStatus((prev) => ({
-      ...prev,
-      [dayIndex]: status,
-    }));
+  const toggleDayStatus = async (dayIndex, status) => {
+    setDayStatus((prev) => {
+      const updatedDays = { ...prev, [dayIndex]: status };
+
+      // Save to Supabase immediately
+      if (gymRow?.id) {
+        supabase
+          .from('gym')
+          .update({ day_status: updatedDays })
+          .eq('id', gymRow.id)
+          .then(({ error }) => {
+            if (error) console.error('Failed to save day status', error);
+          });
+      }
+
+      return updatedDays;
+    });
   };
 
   const totalDays = selectedPlan.days.length;
@@ -114,6 +129,11 @@ export default function SelectedWorkout() {
 
   const handleResults = () => {
     navigate('/results');
+  };
+
+  const handleNextWeek = async () => {
+    // 4️⃣ Navigate to progress page
+    navigate('/progress');
   };
 
   return (
@@ -225,7 +245,7 @@ export default function SelectedWorkout() {
         <Button
           label="Next Week Workout"
           disabled={timeRemaining > 0 || completedDays < totalDays}
-          onClick={() => navigate('/progress')}
+          onClick={handleNextWeek}
         />
         {(timeRemaining > 0 || completedDays < totalDays) && (
           <p className="unlock-info">

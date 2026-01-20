@@ -19,7 +19,6 @@ export default function Agent() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
       if (!user) return;
 
       if (user.user_metadata?.full_name) {
@@ -43,20 +42,18 @@ export default function Agent() {
       const row = data[0];
       setGymRow(row);
 
-      // 🔑 NORMALIZE HERE (ONLY ONCE)
+      if (row?.selected_plan) {
+        navigate('/selected-workout');
+      }
+
+      // 🔑 NORMALIZE WORKOUTS
       const extractedWorkouts = row.plans?.[0]?.plans ?? [];
       setWorkouts(extractedWorkouts);
-
-      // restore confirmed selection
-      if (row.selected_plan_index !== null) {
-        setTempPickedIndex(row.selected_plan_index);
-      }
     };
 
     fetchUserAndWorkout();
   }, []);
 
-  // 🔹 Guard
   if (!gymRow || workouts.length === 0) {
     return (
       <div style={{ padding: 40 }}>
@@ -66,11 +63,9 @@ export default function Agent() {
     );
   }
 
-  const pickedIndex = gymRow.selected_plan_index;
-
   const handleExpandAndPick = (index) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-    setTempPickedIndex(index);
+    setExpandedIndex(index); // expands clicked card
+    setTempPickedIndex(index); // temporary selection
   };
 
   const handleConfirmPick = async () => {
@@ -82,7 +77,6 @@ export default function Agent() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
       if (!user) {
         alert('You must be logged in.');
         return;
@@ -93,18 +87,16 @@ export default function Agent() {
       const { error } = await supabase
         .from('gym')
         .update({
-          selected_plan_index: tempPickedIndex,
-          selected_plan: pickedWorkout,
+          selected_plan: pickedWorkout, // save the plan directly
         })
         .eq('id', gymRow.id)
         .eq('user_id', user.id);
 
       if (error) throw error;
 
-      // instant UI sync
+      // update UI instantly
       setGymRow((prev) => ({
         ...prev,
-        selected_plan_index: tempPickedIndex,
         selected_plan: pickedWorkout,
       }));
 
@@ -113,7 +105,7 @@ export default function Agent() {
           goal: gymRow.goal,
           days: gymRow.days,
           train: gymRow.location,
-          pickedPlan: pickedWorkout, // ✅ SINGLE WORKOUT
+          pickedPlan: pickedWorkout,
         },
       });
     } catch (err) {
@@ -156,7 +148,6 @@ export default function Agent() {
           <div
             key={index}
             className={`plan-card
-              ${pickedIndex === index ? 'picked-confirmed' : ''}
               ${tempPickedIndex === index ? 'picked-preview' : ''}
               ${expandedIndex === index ? 'expanded' : ''}
             `}
@@ -164,9 +155,7 @@ export default function Agent() {
           >
             <div className="plan-header">
               <div
-                className={`icon-small-div ${
-                  tempPickedIndex === index ? 'picked' : ''
-                }`}
+                className={`icon-small-div ${tempPickedIndex === index ? 'picked' : ''}`}
               >
                 <CategoryIcon className="icon-small" />
               </div>
@@ -201,11 +190,7 @@ export default function Agent() {
           disabled={tempPickedIndex === null || saving}
           onClick={handleConfirmPick}
         >
-          {saving
-            ? 'Saving...'
-            : tempPickedIndex === null
-              ? 'Select a workout'
-              : 'Confirm workout'}
+          {saving ? 'Saving...' : 'Confirm workout'}
         </button>
       </div>
     </div>

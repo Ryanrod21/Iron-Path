@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import BackgroundEffect from '../components/UI/BackgroundEffect';
 import ProgressBar from '../components/UI/ProgressBar';
 import Button from '../components/button';
+import EditableField from '../components/BackendFunction/EditTableField';
+import LocalEditableField from '../components/BackendFunction/LocalEditField';
 
 export default function Progression() {
   const [q1, setQ1] = useState('');
@@ -13,25 +15,90 @@ export default function Progression() {
   const [step, setStep] = useState(0);
   const [skipped, setSkipped] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null); // this will hold user data
 
-  const handleFinish = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // Get current logged-in user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
-      alert('You must be logged in to save a workout.');
-      setLoading(false);
-      return;
-    }
+      if (!user) return; // no logged-in user
 
-    setLoading(true);
-  };
+      // Fetch user's gym row from Supabase
+      const { data: userData, error } = await supabase
+        .from('gym') // your table name
+        .select('*')
+        .eq('user_id', user.id)
+        .single(); // fetch one row
+
+      if (error) {
+        console.error('Error fetching user data:', error.message);
+        return;
+      }
+
+      setData(userData); // save it in state
+    };
+
+    fetchUserData();
+  }, []);
 
   const TOTAL_QUESTIONS = 7; // change to your actual number
 
   const progressPercent =
     step === 0 ? 0 : Math.round((step / TOTAL_QUESTIONS) * 100);
+
+  const handleSubmitProgress = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert('You must be logged in to save your progress.');
+      return;
+    }
+
+    // Build payload
+    const payload = {
+      user_id: user.id,
+      days: data.days,
+      goal: data.goal,
+      experience: data.experience,
+      minutes: data.minutes,
+      location: data.location,
+      selected_plan: data.selected_plan, // or whatever you want to send
+      ai_questions: {
+        q1,
+        q2,
+        q3,
+        q4,
+        q5,
+      },
+    };
+
+    try {
+      const res = await fetch('https://your-backend-url/progression', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        console.error('Backend error:', result);
+        alert('Failed to save progress.');
+        return;
+      }
+
+      alert('Progress saved successfully!');
+      // Optionally redirect back to results or another page
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting to server.');
+    }
+  };
 
   return (
     <div className="landing-page">
@@ -221,30 +288,61 @@ export default function Progression() {
       {step === 6 && (
         <div className="card step-card">
           <ProgressBar progressPercent={progressPercent} show={step > 0} />
-          <h2>Confirm Your Selections</h2>
-          <p>
-            <strong>How challenging was this weeks workout ?:</strong> {q1}
-          </p>
-          <p>
-            <strong>How sore were you getting ?:</strong> {q2}
-          </p>
-          <p>
-            <strong>Did you complete all schedule workouts this week ?:</strong>{' '}
-            {q3}
-          </p>
-          <p>
-            <strong>
-              Do you feel this week's workouts helped you progress toward your
-              goals ?:
-            </strong>
-            {q4}
-          </p>
-          <p>
-            <strong>
-              Write any comments that you have with this weeks workout !:
-            </strong>{' '}
-            {q5}
-          </p>
+          <h2>Confirm Your Selections or Change your selection! </h2>
+          <div>
+            <EditableField
+              label="Days per Week"
+              value={data.days}
+              userId={data.user_id}
+              column="days"
+            />
+            <EditableField
+              label="Goal"
+              value={data.goal}
+              userId={data.user_id}
+              column="goal"
+            />
+            <EditableField
+              label="Experience"
+              value={data.experience}
+              userId={data.user_id}
+              column="experience"
+            />
+            <EditableField
+              label="Minutes per Session"
+              value={data.minutes}
+              userId={data.user_id}
+              column="minutes"
+            />
+            <EditableField
+              label="Training Location"
+              value={data.location}
+              userId={data.user_id}
+              column="location"
+            />
+            <LocalEditableField
+              label="How challenging was this week's workout?"
+              value={q1}
+              onSave={setQ1}
+              options={['Too Easy', 'Easy', 'Just Right', 'Hard', 'Too Hard']}
+            />
+            <LocalEditableField
+              label="How sore were you getting?"
+              value={q2}
+              onSave={setQ2}
+              options={['Not sore', 'Kinda Sore', 'Very Sore']}
+            />
+
+            <LocalEditableField
+              label="Did this week's workouts help your goals?"
+              value={q4}
+              onSave={setQ4}
+              options={['Yes', 'Somewhat', 'No']}
+            />
+
+            <LocalEditableField label="Comments" value={q5} onSave={setQ5} />
+          </div>
+
           <p>
             Everything correct? Click Finish to generate your AI workout and
             save it.
@@ -262,7 +360,7 @@ export default function Progression() {
               label="Previous Step"
             />
             <Button
-              onClick={handleFinish}
+              onClick={handleSubmitProgress}
               label={loading ? 'Saving...' : 'Finish'}
               disabled={loading}
             />
