@@ -46,6 +46,16 @@ export default function Login() {
     }
   };
 
+  const handleForgotPassword = async () => {
+  const { error } = await resetPassword(email);
+  if (error) {
+    alert(error.message);
+  } else {
+    alert('Password reset email sent!');
+  }
+};
+
+
   return (
     <form onSubmit={handleLogin} className="form-section">
       <h2 className="login-title">Login</h2>
@@ -70,6 +80,14 @@ export default function Login() {
 
       <button type="submit" className="login-button">
         Login
+      </button>
+
+      <button
+        type="button"
+        onClick={handleForgotPassword}
+        className="forgot-password-button"
+      >
+        Forgot Password
       </button>
 
       {message && <p className="login-message">{message}</p>}

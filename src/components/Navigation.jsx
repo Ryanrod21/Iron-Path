@@ -36,7 +36,7 @@ function Navigation() {
   };
 
   return (
-    <div className="nav-container">
+    <div className="nav-container"> 
       <h1>
         <a href="/">IronPath</a>
       </h1>
