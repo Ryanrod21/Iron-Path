@@ -28,9 +28,11 @@ export default function Progression() {
 
       // Fetch user's gym row from Supabase
       const { data: userData, error } = await supabase
-        .from('gym') // your table name
+        .from('gym')
         .select('*')
         .eq('user_id', user.id)
+        .order('week', { ascending: false })
+        .limit(1)
         .single(); // fetch one row
 
       if (error) {
@@ -59,7 +61,24 @@ export default function Progression() {
       return;
     }
 
+    // Ensure we have the user's gym row data loaded
+    if (!data) {
+      alert('User data not loaded yet. Please wait a moment and try again.');
+      return;
+    }
+
+    // setLoading(true);
+
     // Build payload
+    // Backend expects `day_status` to be a boolean. Compute a boolean
+    // from the stored per-day status object (true if all days finished).
+    const computedDayStatus =
+      typeof data.day_status === 'boolean'
+        ? data.day_status
+        : data.day_status && typeof data.day_status === 'object'
+          ? Object.values(data.day_status).every((v) => v === true)
+          : true;
+
     const payload = {
       user_id: user.id,
 
@@ -67,13 +86,14 @@ export default function Progression() {
       previous_plan: data.selected_plan,
 
       // 🔹 MUST match WorkoutPreference / Input model
+      // backend AI expects `train` (not `location`), so map accordingly
       preference: {
         days: data.days,
         goal: data.goal,
-        location: data.location, // IMPORTANT: backend expects "train"
+        location: data.location,
         experience: data.experience,
         minutes: data.minutes,
-        week: 1, // or dynamic week number later
+        week: 1,
       },
 
       // 🔹 Progression answers
@@ -83,8 +103,8 @@ export default function Progression() {
       progression: q4,
       feedback: q5,
 
-      // 🔹 REQUIRED boolean
-      day_status: true,
+      // 🔹 send boolean day_status (backend requires boolean)
+      day_status: computedDayStatus,
     };
 
     try {
@@ -95,6 +115,7 @@ export default function Progression() {
       });
 
       const result = await res.json();
+      // console.log(result);
 
       if (!res.ok) {
         console.error('Backend error:', result);

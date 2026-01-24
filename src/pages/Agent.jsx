@@ -127,7 +127,7 @@ export default function Agent() {
         state: {
           goal: gymRow.goal,
           days: gymRow.days,
-          train: gymRow.location,
+          location: gymRow.location,
           pickedPlan: pickedWorkout,
         },
       });

@@ -31,7 +31,7 @@ export default function Questionnaire() {
     const payload = {
       goal: goalText,
       days: daysText,
-      train: trainText,
+      location: trainText,
       experience: experienceText,
       minutes: minutesText,
     };
