@@ -68,7 +68,7 @@ export default function Progression() {
 
     // Convert array or object to a plain dictionary
     const computedDayStatus = Array.isArray(data.day_status)
-      ? Object.fromEntries(data.day_status.map((v, i) => [i, v]))
+      ? Object.fromEntries(data.day_status.map((v, i) => [`Day ${i + 1}`, v]))
       : typeof data.day_status === 'object'
         ? data.day_status
         : {};
