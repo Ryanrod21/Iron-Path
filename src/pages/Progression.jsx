@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import BackgroundEffect from '../components/UI/BackgroundEffect';
 import ProgressBar from '../components/UI/ProgressBar';
@@ -45,6 +46,8 @@ export default function Progression() {
 
     fetchUserData();
   }, []);
+
+  const navigate = useNavigate();
 
   const TOTAL_QUESTIONS = 7; // change to your actual number
 
@@ -121,8 +124,7 @@ export default function Progression() {
         return;
       }
 
-      console.log('Backend response:', result); // ✅ See new plans here
-      alert('Progress saved successfully!');
+      navigate('/results'); // Navigate to results page
     } catch (err) {
       console.error(err);
       alert('Error connecting to server.');
