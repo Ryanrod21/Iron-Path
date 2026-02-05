@@ -218,9 +218,51 @@ input {
   width: 100%;
 }
 
-@media screen and (max-width: 968px) {
+/* Small phones (375px - 479px) */
+@media screen and (min-width: 375px) {
   .homecard-container {
+    display: flex;
     flex-direction: column;
-    align-items: center;
   }
+
+  .page-bg::before {
+    display: none;
+  }
+
+  .page-bg::after {
+    display: none;
+  }
+
+  .free-btn {
+    padding: 20px;
+    font-size: 16px;
+  }
+
+  .welcome-section h1 {
+    font-size: 48px;
+  }
+}
+
+/*  larger phones */
+@media screen and (min-width: 480px) {
+}
+
+/* Tablets / large phones portrait */
+@media screen and (min-width: 640px) {
+}
+
+/* Tablets landscape / small laptops */
+@media screen and (min-width: 768px) {
+}
+
+/* Laptops / desktops */
+@media screen and (min-width: 1024px) {
+}
+
+/* Large desktops */
+@media screen and (min-width: 1280px) {
+}
+
+/* Ultra-wide screens */
+@media screen and (min-width: 1536px) {
 }

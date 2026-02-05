@@ -6,6 +6,7 @@ import ProgressBar from '../components/UI/ProgressBar';
 import Button from '../components/button';
 import EditTableField from '../components/BackendFunction/EditTableField';
 import LocalEditTableField from '../components/BackendFunction/LocalEditField';
+import IconLoader from '../components/UI/IconLoader';
 
 export default function Progression() {
   const [q1, setQ1] = useState('');
@@ -125,7 +126,7 @@ export default function Progression() {
         alert('Failed to save progress.');
         return;
       }
-       setLoading(false);
+      setLoading(false);
       navigate('/results'); // Navigate to results page
     } catch (err) {
       console.error(err);
@@ -137,14 +138,7 @@ export default function Progression() {
     <div className="landing-page">
       <BackgroundEffect />
 
-      {loading && (
-        <div className="loading-screen">
-          <div className="loader"></div>
-          <p className="text">
-            Generating your AI workout... this may take a few seconds.
-          </p>
-        </div>
-      )}
+      {loading && <IconLoader isLoading={loading} />}
 
       {step === 0 && (
         <div className="card step-card">

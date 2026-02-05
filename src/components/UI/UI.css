@@ -1,0 +1,85 @@
+.loader-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.coin {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgb(41, 208, 238);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+
+  color: white;
+
+  transform-style: preserve-3d;
+  perspective: 800px;
+
+  box-shadow:
+    0 12px 25px rgba(0, 0, 0, 0.45),
+    inset 0 0 8px rgba(255, 255, 255, 0.15);
+}
+
+.spin {
+  animation: coin-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes coin-spin {
+  0% {
+    transform: rotateY(0deg) scale(1);
+  }
+  50% {
+    transform: rotateY(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotateY(360deg) scale(1);
+  }
+}
+
+/* Small phones (375px - 479px) */
+@media screen and (min-width: 375px) {
+  /* Styles for small phones */
+}
+
+/* Larger phones (480px - 639px) */
+@media screen and (min-width: 480px) {
+  /* Styles for larger phones */
+}
+
+/* Tablets / large phones portrait */
+@media screen and (min-width: 640px) {
+  /* Styles for tablets */
+}
+
+/* Tablets landscape / small laptops */
+@media screen and (min-width: 768px) {
+  /* Styles for tablets landscape / small laptops */
+}
+
+/* Laptops / desktops */
+@media screen and (min-width: 1024px) {
+  /* Styles for laptops / desktops */
+}
+
+/* Large desktops */
+@media screen and (min-width: 1280px) {
+  /* Styles for large desktops */
+}
+
+/* Ultra-wide screens */
+@media screen and (min-width: 1536px) {
+  /* Styles for ultra-wide screens */
+}

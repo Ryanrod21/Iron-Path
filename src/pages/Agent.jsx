@@ -55,10 +55,10 @@ export default function Agent() {
       const row = data[0];
       setGymRow(row);
 
-      if (row?.selected_plan) {
-        navigate('/selected-workout');
-        return;
-      }
+      // if (row?.selected_plan) {
+      //   navigate('/selected-workout');
+      //   return;
+      // }
 
       const extractedWorkouts = row.plans?.[0]?.plans ?? [];
       setWorkouts(extractedWorkouts);

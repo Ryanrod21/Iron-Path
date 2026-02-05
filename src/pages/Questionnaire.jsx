@@ -6,6 +6,7 @@ import './page.css';
 import ProgressBar from '../components/UI/ProgressBar';
 import BackgroundEffect from '../components/UI/BackgroundEffect';
 import LocalEditableField from '../components/BackendFunction/LocalEditField';
+import IconLoader from '../components/UI/IconLoader';
 
 export default function Questionnaire() {
   const [step, setStep] = useState(0);
@@ -113,14 +114,7 @@ export default function Questionnaire() {
     <div className="landing-page">
       <BackgroundEffect />
 
-      {loading && (
-        <div className="loading-screen">
-          <div className="loader"></div>
-          <p className="text">
-            Generating your AI workout... this may take a few seconds.
-          </p>
-        </div>
-      )}
+      {loading && <IconLoader isLoading={loading} />}
 
       {/* STEP 0 – WELCOME */}
       {step === 0 && (
@@ -280,7 +274,6 @@ export default function Questionnaire() {
               'Gym with equipment',
               'Home with minimal equipment',
               'Outdoor activities',
-              'Mixed / Flexible',
             ].map((loc) => (
               <label key={loc}>
                 <input
