@@ -143,8 +143,7 @@ export default function App() {
       {user && (
         <div className="welcome-section">
           <h1>Hello, {user.user_metadata?.full_name}!</h1>
-          <p>Ready to start your AI workout?</p>
-
+          <p style={{ textAlign: 'center' }}>Ready to start your AI workout?</p>
           <div className="welcome-actions">
             {!hasWorkout && (
               <Button

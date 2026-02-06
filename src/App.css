@@ -216,26 +216,32 @@ input {
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  align-items: center;
 }
 
 /* Small phones (375px - 479px) */
 @media screen and (max-width: 375px) {
- 
 }
 
 /*  larger phones */
 @media screen and (max-width: 480px) {
-   .homecard-container {
+  .homecard-container {
     display: flex;
     flex-direction: column;
   }
 
   .page-bg::before {
-    display: none;
+    width: 300px;
+    height: 350px;
+    top: -50px;
+    left: -300px;
   }
 
   .page-bg::after {
-    display: none;
+    width: 400px;
+    height: 400px;
+    bottom: 350px;
+    right: -350px;
   }
 
   .free-btn {

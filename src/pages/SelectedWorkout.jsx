@@ -171,7 +171,7 @@ export default function SelectedWorkout() {
               className={`plan-title ${expandedDayIndex === dayIndex ? 'expanded' : ''}`}
             >
               <h4 className="day-title">
-                {day.day} — {day.focus}
+                {day.day} {day.focus}
               </h4>
             </div>
             {expandedDayIndex !== dayIndex && (

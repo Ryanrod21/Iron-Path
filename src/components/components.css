@@ -146,6 +146,7 @@
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .card-container {
@@ -282,12 +283,28 @@
 
 /* Small phones (375px - 479px) */
 @media screen and (max-width: 375px) {
+  .card-header h3 {
+    font-size: 15px;
+  }
 
+  .card-value {
+    font-size: 12px;
+    margin-left: 2px;
+  }
+  .app-button {
+    font-size: 10px;
+  }
+
+  .editable-card {
+    gap: 2px;
+    justify-content: space-around;
+    text-align: center;
+  }
 }
 
 /* Larger phones (480px - 639px) */
 @media screen and (max-width: 480px) {
-    .nav-container {
+  .nav-container {
     padding: 10px 0;
   }
 

@@ -169,9 +169,7 @@ export default function Agent() {
     <div style={{ padding: 40, maxWidth: 1280, margin: '0 auto' }}>
       <div className="results-header">
         {userName && <h2 style={{ color: 'white' }}>Welcome {userName}!</h2>}
-        <h1 style={{ color: 'white', fontSize: '50px' }}>
-          Your Workout Summary
-        </h1>
+        <h1>Your Workout Summary</h1>
         <h2 style={{ fontSize: '30px' }}>Week: {gymRow.week}</h2>
       </div>
 
