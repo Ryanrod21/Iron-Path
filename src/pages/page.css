@@ -408,7 +408,6 @@ p {
 
 .section-title {
   font-size: 26px;
-  margin-bottom: 20px;
 }
 .section-subtitle {
   display: flex;
@@ -1024,7 +1023,9 @@ hr {
 
 /* Large desktops */
 @media screen and (max-width: 1280px) {
-  /* Styles for large desktops */
+  .results-header {
+    font-size: 35px;
+  }
 }
 
 /* Ultra-wide screens */

@@ -38,7 +38,7 @@ export default function EditTableField({
   return (
     <div className="editable-card">
       <div className="card-header">
-        <h3>{label} :</h3>
+        <h3>{label}:</h3>
         <p className="card-value">{value}</p>
       </div>
 

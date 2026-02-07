@@ -152,7 +152,8 @@
 .card-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .card-header {
@@ -176,6 +177,7 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.5rem;
+  justify-content: end;
 }
 
 .choice-card {
@@ -201,6 +203,7 @@
   margin-top: 0.5rem;
   display: flex;
   gap: 0.5rem;
+  justify-content: end;
 }
 
 .timeline-container {
@@ -337,7 +340,9 @@
 
 /* Laptops / desktops */
 @media screen and (max-width: 1024px) {
-  /* Styles for laptops / desktops */
+  .nav-container {
+    padding: 10px 50px 0;
+  }
 }
 
 /* Large desktops */
