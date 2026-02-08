@@ -48,19 +48,19 @@ export default function SelectedWorkout() {
     fetchWorkout();
   }, []);
 
-  // // Countdown timer
-  // useEffect(() => {
-  //   if (!gymRow) return;
+  // Countdown timer
+  useEffect(() => {
+    if (!gymRow) return;
 
-  //   const interval = setInterval(() => {
-  //     const unlockTime =
-  //       new Date(gymRow.created_at).getTime() + 7 * 24 * 60 * 60 * 1000;
-  //     const now = Date.now();
-  //     setTimeRemaining(Math.max(unlockTime - now, 0));
-  //   }, 1000);
+    const interval = setInterval(() => {
+      const unlockTime =
+        new Date(gymRow.created_at).getTime() + 7 * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+      setTimeRemaining(Math.max(unlockTime - now, 0));
+    }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, [gymRow]);
+    return () => clearInterval(interval);
+  }, [gymRow]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -260,7 +260,7 @@ export default function SelectedWorkout() {
       <div className="next-week-wrapper">
         <Button
           label="Next Week Workout"
-          // disabled={timeRemaining > 0 || completedDays < totalDays}
+          disabled={timeRemaining > 0 || completedDays < totalDays}
           onClick={handleNextWeek}
         />
         {(timeRemaining > 0 || completedDays < totalDays) && (

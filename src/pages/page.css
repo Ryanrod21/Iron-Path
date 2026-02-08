@@ -780,6 +780,7 @@ hr {
   margin-top: 8px;
   font-size: 14px;
   color: #555;
+  font-weight: bold;
 }
 
 .button-row {
@@ -831,6 +832,72 @@ hr {
 }
 .progress-button-row button {
   min-width: 120px;
+}
+
+.italic-text {
+  font-size: 20px;
+  margin-top: 20px;
+  font-style: 20px;
+  text-align: center;
+}
+
+/* Ultra-wide screens */
+@media screen and (max-width: 1536px) {
+  /* Styles for ultra-wide screens */
+}
+
+/* Large desktops */
+@media screen and (max-width: 1280px) {
+  .results-header {
+    font-size: 35px;
+  }
+}
+
+/* Laptops / desktops */
+@media screen and (max-width: 1024px) {
+  /* Styles for laptops / desktops */
+}
+
+/* Tablets landscape / small laptops */
+@media screen and (max-width: 768px) {
+  .question-results .editable-card {
+    width: 100%;
+  }
+}
+
+/* Tablets / large phones portrait */
+@media screen and (max-width: 640px) {
+  .landing-page {
+    padding: 10px;
+  }
+
+  .card-header h3 {
+    font-size: 16px;
+  }
+
+  .card-value {
+    font-size: 14px;
+  }
+}
+
+/* Larger phones (480px - 639px) */
+@media screen and (max-width: 480px) {
+  .dialogue-box {
+    padding: 10px 12px;
+  }
+
+  .dialogue-text {
+    font-size: 19px;
+  }
+
+  .card h1 {
+    font-size: 27px;
+    text-align: center;
+  }
+
+  .radio-option span {
+    font-size: 18px;
+  }
 }
 
 /* Small phones (375px - 479px) */
@@ -910,6 +977,7 @@ hr {
   .plan-expanded {
     text-align: center;
   }
+
   .plan-action {
     margin: 60px 0 10px;
   }
@@ -936,10 +1004,7 @@ hr {
     justify-content: center;
   }
 
-  .exercise-reps h3 {
-    text-decoration: underline;
-  }
-
+  .exercise-reps h3,
   .exercise-notes h3 {
     text-decoration: underline;
   }
@@ -965,7 +1030,6 @@ hr {
 
   .section-title {
     font-size: 25px;
-
     margin: 10px 0;
   }
 
@@ -984,51 +1048,4 @@ hr {
   .card-header h3 {
     font-size: 16px;
   }
-}
-
-/* Larger phones (480px - 639px) */
-@media screen and (max-width: 480px) {
-  .dialogue-box {
-    padding: 10px 12px;
-  }
-
-  .dialogue-text {
-    font-size: 19px;
-  }
-
-  .card h1 {
-    font-size: 27px;
-    text-align: center;
-  }
-
-  .radio-option span {
-    font-size: 18px;
-  }
-}
-
-/* Tablets / large phones portrait */
-@media screen and (max-width: 640px) {
-  /* Styles for tablets */
-}
-
-/* Tablets landscape / small laptops */
-@media screen and (max-width: 768px) {
-  /* Styles for tablets landscape / small laptops */
-}
-
-/* Laptops / desktops */
-@media screen and (max-width: 1024px) {
-  /* Styles for laptops / desktops */
-}
-
-/* Large desktops */
-@media screen and (max-width: 1280px) {
-  .results-header {
-    font-size: 35px;
-  }
-}
-
-/* Ultra-wide screens */
-@media screen and (max-width: 1536px) {
-  /* Styles for ultra-wide screens */
 }

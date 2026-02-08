@@ -24,9 +24,9 @@ export default function LocalEditableField({ label, value, onSave, options }) {
 
   return (
     <div className="editable-card">
-      <div className="card-container">
+      <div className={`card-container ${editing && tempValue ? 'active' : ''}`}>
         <div className="card-header">
-          <h3>{label} :</h3>
+          <h3>{label}</h3>
           <p className="card-value">{value || 'Not answered'}</p>
         </div>
 

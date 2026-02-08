@@ -37,45 +37,46 @@ export default function EditTableField({
 
   return (
     <div className="editable-card">
-      <div className="card-header">
-        <h3>{label}:</h3>
-        <p className="card-value">{value}</p>
-      </div>
-
-      {editing && QUESTION_OPTIONS[column] && (
-        <div className="card-edit">
-          <>
-            <div className="choices-row">
-              {QUESTION_OPTIONS[column].map((option) => (
-                <button
-                  key={option}
-                  className={`option-card ${tempValue === option ? 'active' : ''}`}
-                  onClick={() => setTempValue(option)} // just select
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-
-            <div className="edit-buttons">
-              <Button
-                label={saving ? 'Saving...' : 'Save'}
-                onClick={handleSave}
-                disabled={saving}
-              />
-              <Button
-                label="Cancel"
-                onClick={() => {
-                  setTempValue(value);
-                  setEditing(false);
-                }}
-                disabled={saving}
-              />
-            </div>
-          </>
+      <div className={`card-container ${editing && tempValue ? 'active' : ''}`}>
+        <div className="card-header">
+          <h3>{label}:</h3>
+          <p className="card-value">{value}</p>
         </div>
-      )}
 
+        {editing && QUESTION_OPTIONS[column] && (
+          <div className="card-edit">
+            <>
+              <div className="choices-row">
+                {QUESTION_OPTIONS[column].map((option) => (
+                  <button
+                    key={option}
+                    className={`option-card ${tempValue === option ? 'active' : ''}`}
+                    onClick={() => setTempValue(option)} // just select
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+
+              <div className="edit-buttons">
+                <Button
+                  label={saving ? 'Saving...' : 'Save'}
+                  onClick={handleSave}
+                  disabled={saving}
+                />
+                <Button
+                  label="Cancel"
+                  onClick={() => {
+                    setTempValue(value);
+                    setEditing(false);
+                  }}
+                  disabled={saving}
+                />
+              </div>
+            </>
+          </div>
+        )}
+      </div>
       {!editing && (
         <Button
           label="Edit"

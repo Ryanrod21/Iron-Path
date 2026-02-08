@@ -324,12 +324,8 @@ export default function Progression() {
       {step === 6 && (
         <div className="card step-card">
           <ProgressBar progressPercent={progressPercent} show={step > 0} />
-          <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>
-            Confirm Your Selections or Change your selection!{' '}
-          </h1>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
-          >
+          <div className="question-results">
+            <h1>Confirm Your Selections or Change your selection!</h1>
             <EditTableField
               label="Days per Week"
               value={data.days}
@@ -398,26 +394,13 @@ export default function Progression() {
             <LocalEditTableField label="Comments" value={q5} onSave={setQ5} />
           </div>
 
-          <p
-            style={{
-              marginTop: '20px',
-              textAlign: 'center',
-              fontSize: '18px',
-              fontFamily: 'Italic',
-            }}
-          >
-            Everything correct? Click Finish to generate your AI workout and
-            save it.
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              gap: '20px',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: '20px',
-            }}
-          >
+          <div className="italic-text">
+            <p>
+              Everything correct? Click Finish to generate your AI workout and
+              save it.
+            </p>
+          </div>
+          <div className="button-row">
             <Button
               onClick={() => {
                 if (skipped) {

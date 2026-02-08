@@ -127,6 +127,7 @@ export default function Questionnaire() {
               justifyContent: 'center',
               flexDirection: 'column',
               alignItems: 'center',
+              textAlign: 'center',
             }}
           >
             <h1>Let's Get Started</h1>
@@ -353,16 +354,12 @@ export default function Questionnaire() {
                 'Mixed / Flexible',
               ]}
             />
-            <p
-              style={{
-                fontStyle: 'italic',
-                marginTop: '20px',
-                fontSize: '20px',
-              }}
-            >
-              Everything correct? Click Finish to generate your AI workout and
-              save it.
-            </p>
+            <div className="italic-text">
+              <p>
+                Everything correct? Click Finish to generate your AI workout and
+                save it.
+              </p>
+            </div>
           </div>
 
           <div className="button-row">
