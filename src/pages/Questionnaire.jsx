@@ -112,8 +112,6 @@ export default function Questionnaire() {
 
   return (
     <div className="landing-page">
-      <BackgroundEffect />
-
       {loading && <IconLoader isLoading={loading} />}
 
       {/* STEP 0 – WELCOME */}

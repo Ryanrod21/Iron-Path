@@ -322,6 +322,14 @@
     flex-direction: column;
   }
 
+  .card-value {
+    margin: 0;
+  }
+
+  .card-container {
+    justify-content: center;
+  }
+
   .card-container.active {
     flex-direction: column;
     gap: 18px;

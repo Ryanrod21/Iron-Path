@@ -878,6 +878,17 @@ hr {
   .card-value {
     font-size: 14px;
   }
+
+  .progress-button-row {
+    flex-direction: column;
+    margin-top: 35px;
+    gap: 30px;
+  }
+
+  .progress-button-row button {
+    width: 200px;
+    height: 40px;
+  }
 }
 
 /* Larger phones (480px - 639px) */

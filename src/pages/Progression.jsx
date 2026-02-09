@@ -136,8 +136,6 @@ export default function Progression() {
 
   return (
     <div className="landing-page">
-      <BackgroundEffect />
-
       {loading && <IconLoader isLoading={loading} />}
 
       {step === 0 && (
