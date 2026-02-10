@@ -9,6 +9,8 @@ export default function AccountPage() {
   const [data, setData] = useState('');
   const [history, setHistory] = useState([]);
   const [userName, setUserName] = useState('')
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
 
   const navigate = useNavigate()
 
@@ -48,7 +50,9 @@ export default function AccountPage() {
         return;
       }
 
-      console.log('inside', userHistory)
+
+     
+ 
 
       setData(userData);
       setHistory(userHistory || []);
@@ -56,6 +60,13 @@ export default function AccountPage() {
 
     fetchUserData();
   }, []);
+
+  const handleToggle = (index) => {
+  setExpandedIndex(prev =>
+    prev === index ? null : index
+  );
+};
+
 
   const plan_option = data?.plans?.[0]?.plans || []
 
@@ -70,11 +81,14 @@ export default function AccountPage() {
 
   const CategoryIcon = categoryIcons[plan?.category];
   
+  const pastWorkout = history.selected_plan
 
 
-  console.log('User Data', data);
+
 
   console.log("history", history)
+  console.log(data)
+
   return (
     <div className="landing-page">
       <h1>Hello {userName}</h1>
@@ -94,7 +108,7 @@ export default function AccountPage() {
           <div className='user-plan-head'>
               <h2>{plan.category}</h2>
             </div>
-            <div className="plan-header">
+            <div className="user-plan-header">
               <div className='icon-small-div picked'>
               {CategoryIcon && <CategoryIcon className="icon-small" />}
               </div>
@@ -118,13 +132,14 @@ export default function AccountPage() {
           <div className='plan-summaires'>
         <div className= "single-plan-summary">
           <div className='user-plan-head'>
+          <h2>Week {data.week}</h2>
                   <h2>{plan.category}</h2>
                   <p style={{ color: 'white' }}>
                     <strong>Summary:</strong> {plan.plan_summary}
                   </p>
 
                   </div>
-              <div className="plan-header">
+              <div className="user-plan-header">
                 <div className='icon-small-div picked '>
                   <CategoryIcon className="icon-small" />
                 </div>
@@ -149,6 +164,57 @@ export default function AccountPage() {
 
             </div>
       )}
+
+      {history.length > 0 && (
+         <div className= "big-plan-card" >
+        <h1>Your Past workouts</h1>
+        <div className="plan-summaries">
+        {history.map((item, index) => {
+        const plan = item.selected_plan;
+        const CategoryIcon = categoryIcons[item.selected_plan.category];
+        return (
+          
+          <div className={`single-plan-summary-history ${expandedIndex === index ? 'expanded-content' : ''}`} key={index}
+            onClick={() => handleToggle(index)}
+          >
+            <div className="user-plan-head">
+              <h2>Week {item.week} - {plan.category}</h2>
+              <p style={{ color: 'white' }}>
+                <strong>Summary:</strong> {plan.plan_summary}
+              </p>
+            </div>
+
+          {expandedIndex === index && (
+
+            <div className="user-plan-header">
+              <div className="icon-small-div picked">
+                <CategoryIcon className="icon-small" />
+              </div>
+
+              <div className="user-plan-title">
+                <div className="plan-expanded">
+                  {plan.expect && plan.expect.length > 0 && (
+                    <ul className="custom-list">
+                      {plan.expect.map((ex, i) => (
+                        <li key={i}>
+                          <CategoryIcon className="icon-bullet" />
+                          <span style={{ color: 'white' }}>{ex}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
+
 
       {!data.selected_plan && (
         <div>

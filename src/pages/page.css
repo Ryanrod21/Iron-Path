@@ -875,6 +875,30 @@ hr {
   
 }
 
+.single-plan-summary-history {
+  border-radius: 12px;
+  padding: 16px;
+  transition: background-color 0.2s;
+  border: 2px solid rgb(41, 208, 238);
+  cursor: pointer;
+}
+
+.expanded-content {
+  margin-top: 10px;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .user-plan-title {
   display: flex;
   flex-direction: column;
@@ -901,6 +925,11 @@ hr {
   width: 100%;
 }
 
+.user-plan-header{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
 
 /* Ultra-wide screens */
