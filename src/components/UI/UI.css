@@ -49,6 +49,12 @@
   }
 }
 
+.chart-container {
+  background-color: rgba(0, 0, 0, 0.56);
+  border-radius: 20px;
+  width: 100%;
+}
+
 /* Small phones (375px - 479px) */
 @media screen and (max-width: 375px) {
   /* Styles for small phones */
