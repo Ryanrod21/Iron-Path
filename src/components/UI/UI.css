@@ -55,6 +55,14 @@
   width: 100%;
 }
 
+.goals-footer {
+  margin-top: 40px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Small phones (375px - 479px) */
 @media screen and (max-width: 375px) {
   /* Styles for small phones */

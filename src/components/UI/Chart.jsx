@@ -9,6 +9,9 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import Button from '../button';
+import { useState } from 'react';
+import { BicepsFlexed, ChartColumnIncreasing } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -21,9 +24,16 @@ ChartJS.register(
 );
 
 export default function Chart({ history }) {
+  const [goalWeight, setGoalWeight] = useState(0);
+  const [weightEnter, setWeightEnter] = useState(0);
+  const [weightHistory, setWeightHistory] = useState([]); // initially empty
+  const [isEdit, setIsEdit] = useState('');
+  const [activeTab, setActiveTab] = useState('progress'); // default chart
+
   if (!history || history.length === 0) {
     return <p>No workout data yet</p>;
   }
+
   const sortedHistory = [...history].sort((a, b) => a.week - b.week);
 
   const labels = sortedHistory.map((item) => `Week ${item.week}`);
@@ -37,7 +47,7 @@ export default function Chart({ history }) {
     datasets: [
       {
         label: 'Weekley Result',
-        data: [1, 6, 3, 43],
+        data: weightHistory.length > 0 ? weightHistory : [],
         borderWidth: 2,
         borderColor: 'rgb(41, 208, 238)',
         tension: 0.3,
@@ -46,7 +56,7 @@ export default function Chart({ history }) {
       },
       {
         label: 'Target Weight',
-        data: [3, 3, 3, 3],
+        data: [goalWeight, goalWeight, goalWeight],
         type: 'line',
         borderDash: [5, 5],
         borderColor: 'red',
@@ -58,6 +68,8 @@ export default function Chart({ history }) {
     responsive: true,
     scales: {
       y: {
+        min: 0,
+        suggestedMax: 200,
         grid: {
           color: 'white',
           borderColor: 'white',
@@ -83,9 +95,109 @@ export default function Chart({ history }) {
     },
   };
 
+  const handleSave = () => {
+    setWeightHistory((prev) => [...prev, Number(weightEnter)]); // append
+    setWeightEnter(0); // reset input after save
+    setIsEdit(false); // hide input
+  };
+
   return (
     <div className="chart-container">
-      <Line data={data} options={options} />;
+      <div
+        className="tabs"
+        style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}
+      >
+        <button
+          style={{
+            padding: '10px',
+            backgroundColor: activeTab === 'progress' ? '#29d0ee' : '#eee',
+            color: activeTab === 'progress' ? '#fff' : '#000',
+          }}
+          onClick={() => setActiveTab('progress')}
+        >
+          Weekly Progress <BicepsFlexed />
+        </button>
+
+        <button
+          style={{
+            padding: '10px',
+            backgroundColor: activeTab === 'workouts' ? '#29d0ee' : '#eee',
+            color: activeTab === 'workouts' ? '#fff' : '#000',
+          }}
+          onClick={() => setActiveTab('workouts')}
+        >
+          Workout Counts <ChartColumnIncreasing />
+        </button>
+      </div>
+
+      {activeTab === 'progress' && <Line data={data} options={options} />}
+      {activeTab === 'workouts' && (
+        <Line
+          data={{
+            labels,
+            datasets: [
+              {
+                label: 'Workouts Completed',
+                data: workoutCounts,
+                borderWidth: 2,
+                borderColor: 'green',
+                tension: 0.3,
+                pointBackgroundColor: 'black',
+                pointBorderColor: 'green',
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            plugins: {
+              title: { display: true, text: 'Weekly Workouts' },
+            },
+          }}
+        />
+      )}
+
+      <div className="goals-footer">
+        {activeTab === 'progress' && (
+          <>
+            {!isEdit ? (
+              <>
+                <p>Target Weight: {goalWeight}</p>
+                <Button
+                  onClick={() => setIsEdit('goal')}
+                  label="Set Goal Weight"
+                />
+                <p>Enter Weekly Weight: {weightEnter}</p>
+                <Button
+                  onClick={() => setIsEdit('weekly')}
+                  label="Add Weekly Weight"
+                />
+              </>
+            ) : isEdit === 'goal' ? (
+              <>
+                <input
+                  type="number"
+                  min={0}
+                  max={500}
+                  value={goalWeight}
+                  onChange={(e) => setGoalWeight(Number(e.target.value))}
+                />
+                <Button onClick={() => setIsEdit('')} label="Save" />
+              </>
+            ) : (
+              <>
+                <input
+                  type="number"
+                  min={0}
+                  max={500}
+                  value={weightEnter}
+                  onChange={(e) => setWeightEnter(e.target.value)}
+                />
+                <Button onClick={handleSave} label="Save" />
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
