@@ -11,7 +11,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import Button from '../button';
 import { useState } from 'react';
-import { BicepsFlexed, ChartColumnIncreasing } from 'lucide-react';
+import { BicepsFlexed, ChartColumnIncreasing, Footprints } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -26,9 +26,12 @@ ChartJS.register(
 export default function Chart({ history }) {
   const [goalWeight, setGoalWeight] = useState(0);
   const [weightEnter, setWeightEnter] = useState(0);
-  const [weightHistory, setWeightHistory] = useState([]); // initially empty
+  const [weightHistory, setWeightHistory] = useState([]); 
   const [isEdit, setIsEdit] = useState('');
-  const [activeTab, setActiveTab] = useState('progress'); // default chart
+  const [activeTab, setActiveTab] = useState('progress'); 
+  const [mileHistory, setMileHistory] = useState([])
+  const [mileEnter, setMileEnter] = useState(0)
+  const [goalMile, setGoalMile] = useState(0)
 
   if (!history || history.length === 0) {
     return <p>No workout data yet</p>;
@@ -36,18 +39,33 @@ export default function Chart({ history }) {
 
   const sortedHistory = [...history].sort((a, b) => a.week - b.week);
 
-  const labels = sortedHistory.map((item) => `Week ${item.week}`);
+  const labelsweek = sortedHistory.map((item) => `Week ${item.week}`);
 
   const workoutCounts = sortedHistory.map(
     (item) => item.selected_plan.workouts,
   );
+
+  const labels = weightHistory.map((entry) =>
+  new Date(entry.date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  })
+);
+
+const mileLabels = mileHistory.map((entry) => 
+  new Date(entry.date).toLocaleDateString('en-us', {
+    month: 'short',
+    day: 'numeric'
+  })
+)
+
 
   const data = {
     labels,
     datasets: [
       {
         label: 'Weekley Result',
-        data: weightHistory.length > 0 ? weightHistory : [],
+        data: weightHistory.map((entry) => entry.weight),
         borderWidth: 2,
         borderColor: 'rgb(41, 208, 238)',
         tension: 0.3,
@@ -56,7 +74,7 @@ export default function Chart({ history }) {
       },
       {
         label: 'Target Weight',
-        data: [goalWeight, goalWeight, goalWeight],
+        data: labels.map(() => goalWeight),
         type: 'line',
         borderDash: [5, 5],
         borderColor: 'red',
@@ -76,6 +94,15 @@ export default function Chart({ history }) {
           borderWidth: 2,
           drawTicks: true,
         },
+        title: {
+          display: true,
+          text: 'Weight (lbs)',
+          color: 'white',
+          font: {
+          size: 14,
+          weight: 'bold',
+        },
+        }
       },
     },
     x: {
@@ -90,43 +117,78 @@ export default function Chart({ history }) {
       },
       title: {
         display: true,
-        text: 'Workout Progress',
+        text: 'Date',
+        position: 'bottom',
+        color: 'white',
+          font: {
+          size: 14,
+          weight: 'bold',
+        },
       },
     },
   };
 
+
+
+
   const handleSave = () => {
-    setWeightHistory((prev) => [...prev, Number(weightEnter)]); // append
-    setWeightEnter(0); // reset input after save
-    setIsEdit(false); // hide input
-  };
+  if (!weightEnter) return;
+
+  const today = new Date().toISOString().split('T')[0]; 
+
+
+  setWeightHistory((prev) => [
+    ...prev,
+    {
+      date: today,
+      weight: Number(weightEnter),
+    },
+  ]);
+
+  setWeightEnter('');
+  setIsEdit('');
+};
+
+const handleMileSave = () => {
+  if(!mileEnter) return;
+
+  const today = new Date().toISOString().split('T')[0]; 
+
+
+  setMileHistory((prev) => [
+    ...prev,
+    {
+      date: today,
+      mile: Number(mileEnter)
+    }
+  ])
+
+  setMileEnter('')
+  setIsEdit('')
+
+
+}
 
   return (
     <div className="chart-container">
       <div
-        className="tabs"
-        style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}
-      >
-        <button
-          style={{
-            padding: '10px',
-            backgroundColor: activeTab === 'progress' ? '#29d0ee' : '#eee',
-            color: activeTab === 'progress' ? '#fff' : '#000',
-          }}
+        className="tabs" >
+        <button className= {`tabs-btn ${activeTab === 'progress' ? 'active' : ''}`}
           onClick={() => setActiveTab('progress')}
         >
           Weekly Progress <BicepsFlexed />
         </button>
 
-        <button
-          style={{
-            padding: '10px',
-            backgroundColor: activeTab === 'workouts' ? '#29d0ee' : '#eee',
-            color: activeTab === 'workouts' ? '#fff' : '#000',
-          }}
+        <button className= {`tabs-btn ${activeTab === 'workouts' ? 'active' : ''}`}
           onClick={() => setActiveTab('workouts')}
         >
           Workout Counts <ChartColumnIncreasing />
+        </button>
+
+        <button className= {`tabs-btn ${activeTab === 'run' ? 'active' : ''}`}
+          onClick={() => setActiveTab('run')}
+        >
+          Running Progress <Footprints />
         </button>
       </div>
 
@@ -149,6 +211,7 @@ export default function Chart({ history }) {
           }}
           options={{
             responsive: true,
+            
             plugins: {
               title: { display: true, text: 'Weekly Workouts' },
             },
@@ -180,6 +243,7 @@ export default function Chart({ history }) {
                   max={500}
                   value={goalWeight}
                   onChange={(e) => setGoalWeight(Number(e.target.value))}
+                  
                 />
                 <Button onClick={() => setIsEdit('')} label="Save" />
               </>
@@ -191,13 +255,123 @@ export default function Chart({ history }) {
                   max={500}
                   value={weightEnter}
                   onChange={(e) => setWeightEnter(e.target.value)}
-                />
+                  />
                 <Button onClick={handleSave} label="Save" />
               </>
             )}
           </>
         )}
-      </div>
+        </div>
+
+        {activeTab === 'run' && (
+        <Line
+          data={{
+            labels: mileLabels,
+            datasets: [
+              {
+                label: 'Miles Completed',
+                data: mileHistory.map((entry) => entry.mile),
+                borderWidth: 2,
+                borderColor: 'rgb(0, 255, 4)',
+                tension: 0.3,
+                pointBackgroundColor: 'black',
+                pointBorderColor: 'rgb(0, 255, 4)',
+              },
+                 {
+                label: 'Target Mile',
+                data: mileLabels.map(() => goalMile),
+                type: 'line',
+                borderDash: [5, 5],
+                borderColor: 'red',
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+             scales: {
+           y: {
+              min: 0,
+              suggestedMax: 50,
+              grid: {
+                color: 'white',
+                borderColor: 'white',
+                borderWidth: 2,
+                drawTicks: true,
+              },
+              title: {
+                display: true,
+                text: 'Miles',
+                color: 'white',
+                font: {
+                size: 14,
+                weight: 'bold',
+              },
+              }
+                },
+              },
+                      plugins: {
+                legend: {
+                  display: true,
+                },
+                title: {
+                  display: true,
+                  text: 'Date',
+                  position: 'bottom',
+                  color: 'white',
+                    font: {
+                    size: 14,
+                    weight: 'bold',
+                  },
+                },
+              },
+              }}
+              />
+            )}
+
+        <div className="goals-footer">
+        {activeTab === 'run' && (
+          <>
+            {!isEdit ? (
+              <>
+                <p>Target Mile: {goalMile}</p>
+                <Button
+                  onClick={() => setIsEdit('goal')}
+                  label="Set Mile Goal"
+                />
+              
+                <Button
+                  onClick={() => setIsEdit('weekly')}
+                  label="Add Your Miles"
+                />
+              </>
+            ) : isEdit === 'goal' ? (
+              <>
+                <input
+                  type="number"
+                  min={0}
+                  max={500}
+                  value={goalMile}
+                  onChange={(e) => setGoalMile(Number(e.target.value))}
+                  
+                />
+                <Button onClick={() => setIsEdit('')} label="Save" />
+              </>
+            ) : (
+              <>
+                <input
+                  type="number"
+                  min={0}
+                  max={500}
+                  value={mileEnter}
+                  onChange={(e) => setMileEnter(e.target.value)}
+                  />
+                <Button onClick={handleMileSave} label="Save" />
+              </>
+            )}
+          </>
+        )}
+        </div>
+        
     </div>
   );
 }

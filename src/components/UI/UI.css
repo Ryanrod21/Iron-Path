@@ -56,11 +56,37 @@
 }
 
 .goals-footer {
-  margin-top: 40px;
+  margin: 40px 0;
   display: flex;
   gap: 12px;
   align-items: center;
   justify-content: center;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.tabs-btn{
+  padding: 18px;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: 'center';
+  gap: '14px'
+}
+
+.tabs-btn.active{
+  background-color: #29d0ee;
+  color: white;
+}
+
+.tabs button{
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 /* Small phones (375px - 479px) */

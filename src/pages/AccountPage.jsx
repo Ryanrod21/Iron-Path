@@ -61,6 +61,7 @@ export default function AccountPage() {
     setExpandedIndex((prev) => (prev === index ? null : index));
   };
 
+
   const plan_option = data?.plans?.[0]?.plans || [];
 
   const plan = data.selected_plan;
