@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react';
 import { BicepsFlexed, ChartColumnIncreasing, Footprints } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 import { handleGymSave, fetchGymData } from '../../utils/userChartData';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
 ChartJS.register(
   CategoryScale,
@@ -23,6 +24,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  zoomPlugin,
 );
 
 export default function Chart({ history, user }) {
@@ -137,6 +139,22 @@ export default function Chart({ history, user }) {
         font: {
           size: 14,
           weight: 'bold',
+        },
+      },
+      zoom: {
+        pan: {
+          enabled: true, // allows panning
+          mode: 'x', // horizontal only
+          modifierKey: 'ctrl', // optional: require ctrl key
+        },
+        zoom: {
+          wheel: {
+            enabled: false, // enable zooming with mouse wheel
+          },
+          pinch: {
+            enabled: true, // enable pinch zoom on touch devices
+          },
+          mode: 'x', // horizontal zoom only
         },
       },
     },
