@@ -61,7 +61,6 @@ export default function AccountPage() {
     setExpandedIndex((prev) => (prev === index ? null : index));
   };
 
-
   const plan_option = data?.plans?.[0]?.plans || [];
 
   const plan = data.selected_plan;
@@ -83,7 +82,7 @@ export default function AccountPage() {
     <div className="landing-page">
       <h1>Hello {userName}</h1>
 
-      <Chart history={history} />
+      <Chart history={history} user={data} />
 
       {plan_option?.length > 0 && (
         <div className="big-plan-card">

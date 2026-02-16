@@ -53,6 +53,7 @@
   background-color: rgba(0, 0, 0, 0.56);
   border-radius: 20px;
   width: 100%;
+  min-height: 890px;
 }
 
 .goals-footer {
@@ -69,21 +70,21 @@
   margin: 20px 0;
 }
 
-.tabs-btn{
+.tabs-btn {
   padding: 18px;
   background-color: white;
   color: black;
   display: flex;
   align-items: 'center';
-  gap: '14px'
+  gap: '14px';
 }
 
-.tabs-btn.active{
+.tabs-btn.active {
   background-color: #29d0ee;
   color: white;
 }
 
-.tabs button{
+.tabs button {
   display: flex;
   align-items: center;
   gap: 20px;
