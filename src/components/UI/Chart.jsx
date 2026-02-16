@@ -44,7 +44,6 @@ export default function Chart({ history, user }) {
       const data = await fetchGymData({ supabase, userId: user.id });
       if (!data) return;
 
-      // Set state
       setWeightHistory(data.weight_progress || []);
       setMileHistory(data.miles_progress || []);
       setGoalWeight(data.weight_goal ?? null);

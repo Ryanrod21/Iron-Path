@@ -2,12 +2,11 @@ import { supabase } from './supabaseClient';
 
 // Sign up user
 export async function signUpUser({ email, password, name }) {
-  // Sign up with Supabase Auth
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: name }, // store name in user metadata
+      data: { full_name: name, role: 'user' },
     },
   });
   return { data, error };
@@ -24,7 +23,6 @@ export async function loginUser(email, password) {
 }
 
 //Forgot password
-
 export const sendPasswordResetEmail = async (email) => {
   return await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: 'http://localhost:3000/reset-password',
@@ -34,4 +32,31 @@ export const sendPasswordResetEmail = async (email) => {
 // Logout user
 export async function logoutUser() {
   await supabase.auth.signOut();
+}
+
+// Delete currently logged-in user
+export async function deleteUser() {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    console.error('Error getting user:', userError);
+    return { error: userError };
+  }
+
+  if (!user) {
+    console.error('No user logged in');
+    return { error: 'No user logged in' };
+  }
+
+  const { error } = await supabase.auth.deleteUser();
+  if (error) {
+    console.error('Error deleting user:', error);
+    return { error };
+  }
+
+  console.log('User deleted successfully');
+  return { success: true };
 }
