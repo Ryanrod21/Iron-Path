@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './page.css';
 import Button from '../components/button';
 import Chart from '../components/UI/Chart';
+import { deleteUser } from '../lib/auth';
 
 export default function AccountPage() {
   const [data, setData] = useState('');
@@ -97,7 +98,7 @@ export default function AccountPage() {
 
       <Chart history={history} user={data} />
 
-      {plan_option?.length > 0 && (
+      {!data.selected_plan && plan_option?.length > 0 && (
         <div className="big-plan-card">
           <h1>Your Workout Plans Are Ready</h1>
 
@@ -258,6 +259,8 @@ export default function AccountPage() {
           <p>Log your first week to get started 💪</p>
         </div>
       )}
+
+      <Button onClick={() => handleDelete()} label={'Delete Account'} />
     </div>
   );
 }
