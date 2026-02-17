@@ -11,8 +11,11 @@ export default function AccountPage() {
   const [history, setHistory] = useState([]);
   const [userName, setUserName] = useState('');
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    setExpandedIndex(null);
+  }, [currentPage]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -57,6 +60,8 @@ export default function AccountPage() {
     fetchUserData();
   }, []);
 
+  const navigate = useNavigate();
+
   const handleToggle = (index) => {
     setExpandedIndex((prev) => (prev === index ? null : index));
   };
@@ -64,6 +69,8 @@ export default function AccountPage() {
   const plan_option = data?.plans?.[0]?.plans || [];
 
   const plan = data.selected_plan;
+
+  // Icons //
 
   const categoryIcons = {
     'Strength Builder': Dumbbell,
@@ -73,7 +80,13 @@ export default function AccountPage() {
 
   const CategoryIcon = categoryIcons[plan?.category];
 
-  const pastWorkout = history.selected_plan;
+  //Pagination //
+  const ITEMS_PER_PAGE = 5;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+
+  const paginatedHistory = history.slice(startIndex, endIndex);
 
   console.log('history', history);
   console.log(data);
@@ -158,16 +171,21 @@ export default function AccountPage() {
 
       {history.length > 0 && (
         <div className="big-plan-card">
-          <h1>Your Past workouts</h1>
+          <h1>Your Past Workouts</h1>
+
           <div className="plan-summaries">
-            {history.map((item, index) => {
+            {paginatedHistory.map((item, index) => {
+              const realIndex = startIndex + index;
               const plan = item.selected_plan;
-              const CategoryIcon = categoryIcons[item.selected_plan.category];
+              const CategoryIcon = categoryIcons[plan.category];
+
               return (
                 <div
-                  className={`single-plan-summary-history ${expandedIndex === index ? 'expanded-content' : ''}`}
-                  key={index}
-                  onClick={() => handleToggle(index)}
+                  key={realIndex}
+                  className={`single-plan-summary-history ${
+                    expandedIndex === realIndex ? 'expanded-content' : ''
+                  }`}
+                  onClick={() => handleToggle(realIndex)}
                 >
                   <div className="user-plan-head">
                     <h2>
@@ -178,7 +196,7 @@ export default function AccountPage() {
                     </p>
                   </div>
 
-                  {expandedIndex === index && (
+                  {expandedIndex === realIndex && (
                     <div className="user-plan-header">
                       <div className="icon-small-div picked">
                         <CategoryIcon className="icon-small" />
@@ -186,7 +204,7 @@ export default function AccountPage() {
 
                       <div className="user-plan-title">
                         <div className="plan-expanded">
-                          {plan.expect && plan.expect.length > 0 && (
+                          {plan.expect?.length > 0 && (
                             <ul className="custom-list">
                               {plan.expect.map((ex, i) => (
                                 <li key={i}>
@@ -204,6 +222,27 @@ export default function AccountPage() {
               );
             })}
           </div>
+
+          {history.length > ITEMS_PER_PAGE && (
+            <div className="pagination-controls">
+              <Button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+                label={'Prev'}
+              />
+
+              <span>
+                Page {currentPage} of{' '}
+                {Math.ceil(history.length / ITEMS_PER_PAGE)}
+              </span>
+
+              <Button
+                disabled={endIndex >= history.length}
+                onClick={() => setCurrentPage((p) => p + 1)}
+                label={'Next'}
+              />
+            </div>
+          )}
         </div>
       )}
 

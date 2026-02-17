@@ -148,7 +148,7 @@ export default function Chart({ history, user }) {
         },
         zoom: {
           wheel: {
-            enabled: false, // enable zooming with mouse wheel
+            enabled: true, // enable zooming with mouse wheel
           },
           pinch: {
             enabled: true, // enable pinch zoom on touch devices
@@ -285,7 +285,7 @@ export default function Chart({ history, user }) {
                   onClick={() => setIsEdit('goal')}
                   label="Set Goal Weight"
                 />
-                <p>Enter Weekly Weight: {weightEnter}</p>
+                <p>Enter Weekly Weight: </p>
                 <Button
                   onClick={() => setIsEdit('weekly')}
                   label="Add Weekly Weight"
@@ -298,7 +298,15 @@ export default function Chart({ history, user }) {
                   min={0}
                   max={500}
                   value={goalWeight}
-                  onChange={(e) => setGoalWeight(e.target.value)}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+
+                    if (value > 500) return;
+                    if (value < 0) return;
+
+                    setGoalWeight(value);
+                  }}
+                  placeholder="Enter Your Weight Goal"
                 />
                 <Button
                   onClick={() => handleSave('weight_goal')}
@@ -318,7 +326,15 @@ export default function Chart({ history, user }) {
                   min={0}
                   max={500}
                   value={weightEnter}
-                  onChange={(e) => setWeightEnter(e.target.value)}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+
+                    if (value > 500) return;
+                    if (value < 0) return;
+
+                    setWeightEnter(value);
+                  }}
+                  placeholder="Enter Your Weight"
                 />
                 <Button
                   onClick={() => handleSave('weight_progress')}
@@ -357,7 +373,15 @@ export default function Chart({ history, user }) {
                   min={0}
                   max={500}
                   value={goalMile}
-                  onChange={(e) => setGoalMile(e.target.value)}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+
+                    if (value > 500) return;
+                    if (value < 0) return;
+
+                    setGoalMile(value);
+                  }}
+                  placeholder="Enter Your Mile Goal"
                 />
                 <Button onClick={() => handleSave('miles_goal')} label="Save" />
                 <Button
@@ -374,7 +398,14 @@ export default function Chart({ history, user }) {
                   min={0}
                   max={500}
                   value={mileEnter}
-                  onChange={(e) => setMileEnter(e.target.value)}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+
+                    if (value > 500) return;
+                    if (value < 0) return;
+
+                    setMileEnter(value);
+                  }}
                   placeholder="Enter miles"
                 />
                 <Button
