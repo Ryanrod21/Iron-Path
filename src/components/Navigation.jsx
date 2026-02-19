@@ -42,7 +42,7 @@ function Navigation() {
       {user && (
         <div className="nav-links">
           <h3>
-            <button onClick={() => navigate('/')}>IronPath</button>
+            <a href="/">Home</a>
           </h3>
           <h3>
             <a href="user-account">Account</a>
