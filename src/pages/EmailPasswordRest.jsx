@@ -8,26 +8,34 @@ export default function EmailPasswordRest() {
   const [error, setError] = useState('');
 
   const handleUpdatePassword = async () => {
+    setError('');
+    setMessage('');
+
     if (!email) {
       setError('Please enter your email address.');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
       return;
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://iron-path-five.vercel.app/password-reset',
-    });
+    try {
+      // Hardcoded redirect URL for your Vercel site
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://iron-path-five.vercel.app/password-reset',
+      });
 
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage('Email sent to update password !');
+      if (error) {
+        setError(error.message);
+      } else {
+        setMessage('Password reset email sent! Check your inbox.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+      console.error(err);
     }
   };
 

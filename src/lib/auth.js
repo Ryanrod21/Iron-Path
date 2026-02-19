@@ -25,7 +25,7 @@ export async function loginUser(email, password) {
 //Forgot password
 export const sendPasswordResetEmail = async (email) => {
   return await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'http://localhost:3000/reset-password',
+    redirectTo: 'https://iron-path-five.vercel.app/password-reset',
   });
 };
 
