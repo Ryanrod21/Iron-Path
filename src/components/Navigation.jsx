@@ -56,10 +56,10 @@ function Navigation() {
       {!user && (
         <div className="nav-links">
           <h3>
-            <a href="/sign-up">Sign Up</a>
+            <a onClick={() => navigate('/sign-up')}>Sign Up</a>
           </h3>
           <h3>
-            <a href="/login">Log In</a>
+            <a onClick={() => navigate('/login')}>Log In</a>
           </h3>
         </div>
       )}
