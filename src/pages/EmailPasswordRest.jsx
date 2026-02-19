@@ -14,16 +14,15 @@ export default function EmailPasswordRest() {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
     if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address.");
+      setError('Please enter a valid email address.');
       return;
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      email,
-      {redirectTo: "http://localhost:5173/password-reset", }
-    );
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://iron-path-five.vercel.app/password-reset',
+    });
 
     if (error) {
       setMessage(error.message);
@@ -33,19 +32,23 @@ export default function EmailPasswordRest() {
   };
 
   return (
-    <form className='form-section' onSubmit={(e) => e.preventDefault()}>
-      <h2 className='login-title'>Password Reset</h2>
+    <form className="form-section" onSubmit={(e) => e.preventDefault()}>
+      <h2 className="login-title">Password Reset</h2>
       <input
-        type='email'
-        placeholder='Email'
+        type="email"
+        placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
-        className='login-input'
-        />
+        className="login-input"
+      />
 
-      <Button type='button' onClick={handleUpdatePassword} className='login-button' label={"Update Password"} />
-            {message && <p className="login-message">{message}</p>}
-            {error && <p className="login-message">{error}</p>}
-
+      <Button
+        type="button"
+        onClick={handleUpdatePassword}
+        className="login-button"
+        label={'Update Password'}
+      />
+      {message && <p className="login-message">{message}</p>}
+      {error && <p className="login-message">{error}</p>}
     </form>
   );
 }
