@@ -36,7 +36,7 @@ function Navigation() {
   return (
     <div className="nav-container">
       <h1>
-        <button onClick={() => navigate('/')}>IronPath</button>
+        <a href="/">IronPath</a>
       </h1>
 
       {user && (
