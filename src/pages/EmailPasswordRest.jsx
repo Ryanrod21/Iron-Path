@@ -23,7 +23,6 @@ export default function EmailPasswordRest() {
     }
 
     try {
-      // Hardcoded redirect URL for your Vercel site
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: 'https://iron-path-five.vercel.app/password-reset',
       });

@@ -33,30 +33,3 @@ export const sendPasswordResetEmail = async (email) => {
 export async function logoutUser() {
   await supabase.auth.signOut();
 }
-
-// Delete currently logged-in user
-export async function deleteUser() {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError) {
-    console.error('Error getting user:', userError);
-    return { error: userError };
-  }
-
-  if (!user) {
-    console.error('No user logged in');
-    return { error: 'No user logged in' };
-  }
-
-  const { error } = await supabase.auth.deleteUser();
-  if (error) {
-    console.error('Error deleting user:', error);
-    return { error };
-  }
-
-  console.log('User deleted successfully');
-  return { success: true };
-}
